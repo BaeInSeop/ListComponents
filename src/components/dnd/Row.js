@@ -1,13 +1,11 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { DndProvider, useDrag, useDrop } from "react-dnd";
-import { ReactComponent as Icon_Note } from "./Images/icon_note.svg";
-import { ReactComponent as Icon_Audio } from "./Images/icon_audio.svg";
-import { ReactComponent as Icon_Pdf } from "./Images/icon_pdf.svg";
-import { ReactComponent as Icon_File } from "./Images/icon_file.svg";
-import { ReactComponent as Icon_Folder } from "./Images/icon_folder.svg";
-import { ReactComponent as Icon_Dot } from "./Images/icon_dot.svg";
+import { getEmptyImage } from "react-dnd-html5-backend";
+import RenderIcon from "./RenderIcon";
+import ReactLoading from "react-loading";
 
 const Row = ({
+  rows,
   row,
   index,
   moveRow,
@@ -15,13 +13,27 @@ const Row = ({
   checkList,
   setCheckList,
   setModalData,
+  setCurrentPath,
 }) => {
+  const resizeWidth = process.env.REACT_APP_RESIZING_WIDTH;
   const dropRef = useRef(null);
   const dragRef = useRef(null);
-  const [isMouseOver, setIsMouseOver] = useState(false);
+  const inputRef = useRef(null);
+
+  const [isMouseOverDiv, setIsMouseOverDiv] = useState(false);
+  const [isMouseOverSpan, setIsMouseOverSpan] = useState(false);
+
+  const [enterFolderIndex, setEnterFolderIndex] = useState(null);
 
   const [, drop] = useDrop({
     accept: "row",
+    drop: (item) => {
+      const dragIndex = item.index;
+      const hoverIndex = index;
+      // console.log(item, row);
+      moveRow(dragIndex, hoverIndex, item, row);
+      setEnterFolderIndex(null);
+    },
     hover(item, monitor) {
       if (!dropRef.current) {
         return;
@@ -30,8 +42,10 @@ const Row = ({
       const hoverIndex = index;
       // Don't replace items with themselves
       if (dragIndex === hoverIndex) {
+        setEnterFolderIndex(null);
         return;
       }
+
       // Determine rectangle on screen
       const hoverBoundingRect = dropRef.current.getBoundingClientRect();
       // Get vertical middle
@@ -42,104 +56,167 @@ const Row = ({
       // Get pixels to the top
       const hoverClientY = clientOffset.y - hoverBoundingRect.top;
       // Only perform the move when the mouse has crossed half of the items height
+
       // When dragging downwards, only move when the cursor is below 50%
       // When dragging upwards, only move when the cursor is above 50%
       // Dragging downwards
       if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+        setEnterFolderIndex(null);
         return;
       }
       // Dragging upwards
       if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+        setEnterFolderIndex(null);
         return;
       }
       // Time to actually perform the action
-      moveRow(dragIndex, hoverIndex);
+
+      if ("folder" === rows[hoverIndex].original.type) {
+        setEnterFolderIndex(rows[hoverIndex].original.id);
+      } else {
+        setEnterFolderIndex(null);
+      }
+
       // Note: we're mutating the monitor item here!
       // Generally it's better to avoid mutations,
       // but it's good here for the sake of performance
       // to avoid expensive index searches.
-      item.index = hoverIndex;
+      // item.index = hoverIndex;
     },
   });
 
   const [{ isDragging }, drag, preview] = useDrag({
     type: "row",
-    item: { index },
+    item: { index, row, type: "row" },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
   });
 
   const onClickItem = (row) => {
-    console.log("Clicked Item : ", row);
-    setCheckList([row.id]);
-  };
-
-  const renderImage = (type) => {
-    const size = "20px";
-
-    switch (type) {
-      case "file":
-        return <Icon_File width={size} height={size} />;
-
-      case "audio":
-        return <Icon_Audio width={size} height={size} />;
-
-      case "pdf":
-        return <Icon_Pdf width={size} height={size} />;
-
-      case "note":
-        return <Icon_Note width={size} height={size} />;
-
-      case "folder":
-        return <Icon_Folder width={size} height={size} />;
-
-      default:
-        return type;
+    if (1 === row.original.status) {
+      console.log("Clicked Item : ", row);
+      if ("folder" === row.original.type) {
+        console.log("Click Folder - Get File from DB");
+        setCurrentPath(`${row.original.path}/${row.original.title}`);
+      } else {
+        setCheckList([row.id]);
+      }
+    } else {
+      console.log("Cannot Open Item");
     }
   };
-
   const opacity = isDragging ? 0 : 1;
 
-  preview(drop(dropRef));
-  drag(dragRef);
+  // preview(drop(dropRef));
+  drag(drop(dragRef));
+
+  useEffect(() => {
+    preview(getEmptyImage(), { captureDraggingState: true });
+  }, [preview]);
+
+  useEffect(() => {
+    console.log("enterFolderIndex : ", enterFolderIndex);
+  }, [enterFolderIndex]);
+
+  useEffect(() => {
+    var checkBox = document.getElementById(row.id);
+
+    checkBox.addEventListener("mousedown", (e) => {
+      e.stopImmediatePropagation();
+    });
+  }, [checkList]);
 
   return (
-    <div ref={dropRef} style={{ opacity }} className="tr">
-      <div ref={dragRef} onClick={(e) => onClickItem(row)}>
-        <input
-          style={{ width: "50px" }}
-          type="checkbox"
-          id={row.id}
-          onChange={(e) => {
-            if (e.target.checked) {
-              setCheckList([...checkList, row.id]);
-            } else {
-              setCheckList(checkList.filter((list) => list !== row.id));
-            }
-          }}
-          checked={checkList.includes(row.id) ? true : false}
-        />
+    <div
+      ref={dropRef}
+      style={{
+        fontWeight: isDragging ? "bold" : "",
+        border: row.original.id === enterFolderIndex ? "1px solid red" : "none",
+      }}
+      className="tr"
+    >
+      <div
+        ref={dragRef}
+        onMouseDown={(e) =>
+          1 < checkList.length ? null : setCheckList([row.id])
+        }
+      >
+        <div style={{ display: "inline-block" }} className="td">
+          <input
+            className="checkbox"
+            style={{ width: "50px" }}
+            type="checkbox"
+            id={row.id}
+            onChange={(e) => {
+              if (e.target.checked) {
+                setCheckList([...checkList, row.id]);
+              } else {
+                setCheckList(checkList.filter((list) => list !== row.id));
+              }
+            }}
+            checked={checkList.includes(row.id) ? true : false}
+          />
+        </div>
         {row.cells.map((cell) => {
           prepareRow(row);
           return (
-            <div {...cell.getCellProps()} className="td">
-              {"Type" === cell.column.Header ? (
-                renderImage(cell.value)
-              ) : "Title" === cell.column.Header ? (
-                <div
-                  onMouseEnter={() => setIsMouseOver(true)}
-                  onMouseLeave={() => setIsMouseOver(false)}
-                >
-                  {cell.render("Cell")}
-                  <span onClick={() => setModalData(row.original)}>
-                    {isMouseOver && <Icon_Dot width="10px" />}
-                  </span>
-                </div>
-              ) : (
-                cell.render("Cell")
-              )}
-            </div>
+            <>
+              <div {...cell.getCellProps()} className="td">
+                {"Type" === cell.column.Header ? (
+                  <RenderIcon type={cell.value} size="20px" />
+                ) : "Title" === cell.column.Header ? (
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: "10px",
+                      opacity: 1 !== row.original.status ? 0.5 : 1,
+                    }}
+                    onMouseEnter={() => setIsMouseOverDiv(true)}
+                    onMouseLeave={() => setIsMouseOverDiv(false)}
+                  >
+                    <span
+                      style={{
+                        fontWeight: isMouseOverSpan ? "bold" : "",
+                        textDecoration: isMouseOverSpan ? "underline" : "none",
+                      }}
+                      onMouseOver={() => setIsMouseOverSpan(true)}
+                      onMouseLeave={() => setIsMouseOverSpan(false)}
+                      onClick={(e) => onClickItem(row)}
+                    >
+                      {cell.render("Cell")}
+                    </span>
+
+                    {2 === row.original.status ? (
+                      <span>
+                        <ReactLoading
+                          type="spin"
+                          color={"red"}
+                          width={15}
+                          height={15}
+                        />
+                      </span>
+                    ) : (
+                      <span onClick={() => setModalData(row.original)}>
+                        {isMouseOverDiv && (
+                          <RenderIcon type={"dot"} size="15px" />
+                        )}
+                      </span>
+                    )}
+                  </div>
+                ) : (
+                  cell.render("Cell")
+                )}
+              </div>
+              <span
+                style={{
+                  display: "inline-block",
+                  width: resizeWidth,
+                  height: "100%",
+                  // padding: "0.5rem",
+                }}
+              />
+            </>
           );
         })}
       </div>

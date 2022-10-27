@@ -2,9 +2,11 @@ import logo from "./logo.svg";
 import "./App.css";
 import { useEffect, useMemo, useState } from "react";
 import Table from "./components/dnd/Table";
+import dummyData from "./components/dnd/data/data.json";
 
 function App() {
-  const [hideColumns, setHideColumns] = useState([]);
+  const [currentPath, setCurrentPath] = useState("home");
+
   const [columns, setColumns] = useState([
     {
       Header: "ID",
@@ -16,7 +18,7 @@ function App() {
     {
       Header: "Title",
       accessor: "title",
-      width: 100,
+      width: 300,
       disableResizing: false,
       show: true,
     },
@@ -36,41 +38,28 @@ function App() {
     },
   ]);
 
-  const [data, setData] = useState([
-    {
-      id: 0,
-      title: "Test_File",
-      type: "file",
-      modified: "2022-10-17",
-    },
-    {
-      id: 1,
-      title: "Test_Note",
-      type: "note",
-      modified: "2022-10-18",
-    },
-    {
-      id: 2,
-      title: "Test_pdf.pdf",
-      type: "pdf",
-      modified: "2022-10-20",
-    },
-    {
-      id: 3,
-      title: "Test_Folder",
-      type: "folder",
-      modified: "2022-10-19",
-    },
-  ]);
+  const [data, setData] = useState([]);
+  const [checkList, setCheckList] = useState([]);
+  const [homeData, setHomeData] = useState(dummyData["home"]);
+  const [testFolderData, setTestFolderData] = useState(
+    dummyData["home/Test_Folder"]
+  );
 
   useEffect(() => {
-    const noShowingColumns = columns.filter((e) => !e.show);
-    setHideColumns(noShowingColumns.map((column) => column.accessor));
-  }, [columns]);
+    setCheckList([]);
+    if ('""' !== currentPath) {
+      switch (currentPath) {
+        case "home":
+          return setData(homeData);
 
-  useEffect(() => {
-    console.log("hideColumns : ", hideColumns);
-  }, [hideColumns]);
+        case "home/Test_Folder":
+          return setData(testFolderData);
+
+        default:
+          return setData(homeData);
+      }
+    }
+  }, [currentPath]);
 
   return (
     <div className="App">
@@ -79,6 +68,13 @@ function App() {
         setColumns={setColumns}
         data={data}
         setData={setData}
+        currentPath={currentPath}
+        setCurrentPath={setCurrentPath}
+        checkList={checkList}
+        setCheckList={setCheckList}
+        searchFilter
+        path
+        pagination
       />
     </div>
   );

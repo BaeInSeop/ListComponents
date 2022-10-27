@@ -2,15 +2,8 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useDrop, useDrag } from "react-dnd";
 import { getEmptyImage } from "react-dnd-html5-backend";
 
-const Columns = ({
-  column,
-  index,
-  moveColumn,
-  initialColumnOrder,
-  setInitialColumnOrder,
-}) => {
+const Columns = ({ state, column, index, moveColumn }) => {
   const ref = useRef();
-  const [resizing, setResizing] = useState(false);
   const { id, Header } = column;
 
   const [, drop] = useDrop({
@@ -27,6 +20,7 @@ const Columns = ({
         id,
         index,
         header: Header,
+        type: "column",
       };
     },
     collect: (monitor) => ({
@@ -43,19 +37,23 @@ const Columns = ({
     preview(getEmptyImage(), { captureDraggingState: true });
   }, [preview]);
 
+  const updateColumnWidthToDb = () => {
+    console.log("DB Update Column Size : ", state.columnResizing.columnWidths);
+  };
+
   return (
     <>
       <div
         ref={ref}
         {...column.getHeaderProps(column.getSortByToggleProps())}
         className="th"
+        onDragStart={(e) => (isDragging ? e.stopPropagation() : null)}
       >
         {memoizedColumn}
         <span>
           {column.isSorted ? (column.isSortedDesc ? " ↓" : " ↑") : ""}
         </span>
       </div>
-
       {column.canResize && (
         <div
           {...column.getResizerProps()}

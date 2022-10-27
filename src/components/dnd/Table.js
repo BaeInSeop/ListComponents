@@ -2,36 +2,31 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   useBlockLayout,
   useColumnOrder,
-  useFlexLayout,
   useResizeColumns,
   useTable,
   useSortBy,
   useGlobalFilter,
-  useRowSelect,
 } from "react-table";
 
-import {
-  ContextMenu,
-  MenuItem,
-  ContextMenuTrigger,
-  showMenu,
-} from "react-contextmenu";
+import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 import moment from "moment";
 
 import { FileDrop } from "react-file-drop";
 
 import styled from "styled-components";
-import { DndProvider, useDrag, useDrop } from "react-dnd";
+import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import Row from "./Row";
 import Preview from "./Preview";
 import Columns from "./Columns";
 import Search from "./Search";
 
-import { ReactComponent as Icon_Check } from "./Images/icon_check.svg";
 import "./css/ContextMenu.css";
 import RenderModal from "./RenderModal";
 import DetailItem from "./DetailItem";
+import FolderPath from "./FolderPath";
+import Pagination from "./Pagination";
+import RenderIcon from "./RenderIcon";
 
 const Styles = styled.div`
   padding: 1rem;
@@ -45,7 +40,7 @@ const Styles = styled.div`
     .resizer {
       display: inline-block;
       background: black;
-      width: 3px;
+      width: ${(props) => props.resizeWidth};
       position: relative;
       transform: translateX(50%);
       z-index: 1;
@@ -72,7 +67,8 @@ const Styles = styled.div`
     }
 
     .th,
-    .td {
+    .td,
+    .checkbox {
       margin: 0;
       padding: 0.5rem;
       border-bottom: 1px solid #ccc;
@@ -103,11 +99,28 @@ const Styles = styled.div`
   }
 `;
 
-const Table = ({ columns, setColumns, data, setData }) => {
-  const [checkList, setCheckList] = useState([]);
-  const [records, setRecords] = useState(data);
+const Table = ({
+  columns,
+  setColumns,
+  data,
+  setData,
+  currentPath,
+  setCurrentPath,
+  checkList,
+  setCheckList,
+  searchFilter,
+  path,
+  pagination,
+}) => {
+  const resizeWidth = process.env.REACT_APP_RESIZING_WIDTH;
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [maximumRow, setMaximumRow] = useState(10);
+  const [totalRowCount, setTotalRowCount] = useState(30);
+
   const [isOpenDetailModal, setIsOpenDetailModal] = useState(false);
   const [modalData, setModalData] = useState();
+  const [showContextMenu, setShowContextMenu] = useState(false);
 
   const [initialColumnOrder, setInitialColumnOrder] = useState([
     "id",
@@ -121,14 +134,15 @@ const Table = ({ columns, setColumns, data, setData }) => {
     setHiddenColumns(noShowingColumns.map((column) => column.accessor));
   }, [columns]);
 
+  useEffect(() => {
+    console.log("searchFilter : ", searchFilter);
+  }, [searchFilter]);
+
   const defaultSize = useMemo(() => ({
-    minWidth: 30,
+    minWidth: 80,
     width: 150,
     maxWidth: 400,
   }));
-  const getRowId = useCallback((row) => {
-    return row.id;
-  }, []);
 
   useEffect(() => {
     if (!isOpenDetailModal) {
@@ -178,21 +192,19 @@ const Table = ({ columns, setColumns, data, setData }) => {
     headerGroups,
     rows,
     prepareRow,
-    // selectedFlatRows,
     state,
     setColumnOrder,
     setGlobalFilter,
     setHiddenColumns,
+    state: { pageIndex, pageSize },
   } = useTable(
     {
-      data: records,
+      data,
       columns,
       // getRowId,
       initialState: {
         columnOrder: initialColumnOrder,
-        // hiddenColumns: hideColumns,
       },
-
       defaultColumn: defaultSize,
     },
     useColumnOrder,
@@ -201,6 +213,33 @@ const Table = ({ columns, setColumns, data, setData }) => {
     useGlobalFilter,
     useSortBy
   );
+
+  useEffect(() => {
+    if (0 < Object.keys(state.columnResizing.columnWidths).length) {
+      console.log(
+        "DB Update Column Size : ",
+        state.columnResizing.columnWidths
+      );
+    }
+  }, [state.columnResizing.columnWidths]);
+
+  useEffect(() => {
+    console.log("DB Update Column Order : ", state.columnOrder);
+  }, [state.columnOrder]);
+
+  useEffect(() => {
+    if (0 < state.hiddenColumns.length) {
+      console.log("DB Update HiddenColumn : ", state.hiddenColumns);
+    }
+  }, [state.hiddenColumns]);
+
+  useEffect(() => {
+    console.log("Page Changed - Get Item List", currentPage, totalRowCount);
+  }, [currentPage]);
+
+  useEffect(() => {
+    console.log("Path Changed - Get Item List", currentPath);
+  }, [currentPath]);
 
   const moveColumn = useCallback(
     (item, newIndex) => {
@@ -211,28 +250,35 @@ const Table = ({ columns, setColumns, data, setData }) => {
 
       newOrder.splice(newIndex, 0, removedColumn);
 
-      console.log("nowOrder : ", newOrder);
-
       setColumnOrder(newOrder);
     },
     [state, setColumnOrder]
   );
 
-  const moveRow = (dragIndex, hoverIndex) => {
-    console.log(dragIndex, hoverIndex);
-    const dragRecord = records[dragIndex];
-    const tempRecords = [...records];
+  const moveRow = (dragIndex, hoverIndex, item, row) => {
+    if (dragIndex === hoverIndex) {
+      return;
+    }
+    if ("folder" === row.original.type) {
+      console.log("DB Update Move Item to Folder", checkList, row);
+      return;
+    } else {
+      console.log("DB Update Change Row : ", dragIndex, hoverIndex);
+      return;
+    }
 
-    tempRecords.splice(dragIndex, 1);
-    tempRecords.splice(hoverIndex, 0, dragRecord);
+    // const dragRecord = data[dragIndex];
+    // const tempRecords = [...data];
 
-    console.log("tempRecords : ", tempRecords);
+    // tempRecords.splice(dragIndex, 1);
+    // tempRecords.splice(hoverIndex, 0, dragRecord);
 
-    setRecords(tempRecords);
+    // console.log("tempRecords : ", tempRecords);
+
+    // setData(tempRecords);
   };
 
-  const handleItemClick = (e, data) => {
-    console.log(" handleItemClick : ", e, data);
+  const onClickContextMenu = (e, data) => {
     const col = columns.find((column) => column.accessor === data.accessor);
 
     setColumns((prev) =>
@@ -250,24 +296,46 @@ const Table = ({ columns, setColumns, data, setData }) => {
 
   const onDropFile = (files, event) => {
     console.log("files : ", files);
-    const addFiles = files.map((file) => {
-      return {
-        title: file.name,
-        type: "file",
-        modified: moment(file.lastModified).format("YYYY-MM-DD"),
-      };
-    });
+    let rowIndex = rows.length;
+    let fileList = [];
 
-    console.log("addFiles : ", addFiles);
+    for (let i = 0; i < files.length; i++) {
+      fileList.push({
+        id: rowIndex,
+        title: files[i].name,
+        type: "file",
+        modified: moment(files[i].lastModified).format("YYYY-MM-DD"),
+        path: currentPath,
+        status: 0,
+      });
+      rowIndex++;
+    }
+
+    setData((prev) => prev.concat(fileList));
   };
 
   return (
     <>
       <DndProvider backend={HTML5Backend}>
-        <Search onSubmit={setGlobalFilter} />
-        <Styles>
-          <div {...getTableProps()} className="table">
-            <ContextMenuTrigger id="same_unique_identifier">
+        {searchFilter && <Search onSubmit={setGlobalFilter} />}
+        {path && (
+          <FolderPath
+            currentPath={currentPath}
+            setCurrentPath={setCurrentPath}
+            checkList={checkList}
+          />
+        )}
+        <Styles resizeWidth={resizeWidth}>
+          <div
+            {...getTableProps()}
+            className="table"
+            style={{ pointerEvents: showContextMenu ? "none" : "initial" }}
+          >
+            <ContextMenuTrigger
+              id="same_unique_identifier"
+              mouseButton={2}
+              holdToDisplay={-1}
+            >
               <div>
                 {headerGroups.map((headerGroup) => (
                   <div
@@ -276,9 +344,17 @@ const Table = ({ columns, setColumns, data, setData }) => {
                     })}
                     className="tr"
                   >
-                    <div>
+                    <div
+                      style={{
+                        display: "inline-block",
+                        textAlign: "center",
+                        width: "66px",
+                        boxSizing: "border-box",
+                      }}
+                      className="th"
+                    >
                       <input
-                        style={{ width: "50px" }}
+                        style={{ width: "50px", margin: 0 }}
                         type="checkbox"
                         id={"checkall"}
                         onChange={(e) => {
@@ -298,6 +374,7 @@ const Table = ({ columns, setColumns, data, setData }) => {
                     </div>
                     {headerGroup.headers.map((column, idx) => (
                       <Columns
+                        state={state}
                         moveColumn={moveColumn}
                         key={column.id}
                         column={column}
@@ -310,17 +387,22 @@ const Table = ({ columns, setColumns, data, setData }) => {
                 ))}
               </div>
             </ContextMenuTrigger>
-            <ContextMenu id="same_unique_identifier" hideOnLeave={true}>
+            <ContextMenu
+              id="same_unique_identifier"
+              onShow={() => setShowContextMenu(true)}
+              onHide={() => setShowContextMenu(false)}
+            >
               {columns &&
-                columns.map((column) => (
+                columns.map((column, idx) => (
                   <MenuItem
+                    key={idx}
                     data={{ accessor: column.accessor }}
-                    onClick={handleItemClick}
+                    onClick={onClickContextMenu}
                   >
                     {column.Header}
                     {isShowingColumn(column.Header) && (
                       <span>
-                        <Icon_Check width={"20px"} />
+                        <RenderIcon type="check" size="20px" />
                       </span>
                     )}
                   </MenuItem>
@@ -333,6 +415,7 @@ const Table = ({ columns, setColumns, data, setData }) => {
                   (row, index) =>
                     prepareRow(row) || (
                       <Row
+                        rows={rows}
                         index={index}
                         row={row}
                         moveRow={moveRow}
@@ -340,6 +423,8 @@ const Table = ({ columns, setColumns, data, setData }) => {
                         setCheckList={setCheckList}
                         prepareRow={prepareRow}
                         setModalData={setModalData}
+                        setData={setData}
+                        setCurrentPath={setCurrentPath}
                         {...row.getRowProps()}
                       />
                     )
@@ -347,9 +432,18 @@ const Table = ({ columns, setColumns, data, setData }) => {
               </div>
             </FileDrop>
           </div>
-          <Preview />
+          <Preview checkList={checkList} />
         </Styles>
       </DndProvider>
+      {pagination && (
+        <Pagination
+          totalCount={totalRowCount}
+          limit={maximumRow}
+          page={currentPage}
+          setPage={setCurrentPage}
+        />
+      )}
+
       <RenderModal
         isOpen={isOpenDetailModal}
         setIsOpen={setIsOpenDetailModal}

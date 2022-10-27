@@ -141,6 +141,7 @@ const Row = ({
         onMouseDown={(e) =>
           1 < checkList.length ? null : setCheckList([row.id])
         }
+        onClick={(e) => setCheckList([row.id])}
       >
         <div style={{ display: "inline-block" }} className="td">
           <input

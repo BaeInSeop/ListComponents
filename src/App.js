@@ -47,7 +47,7 @@ function App() {
 
   useEffect(() => {
     setCheckList([]);
-    if ('""' !== currentPath) {
+    if ("" !== currentPath) {
       switch (currentPath) {
         case "home":
           return setData(homeData);

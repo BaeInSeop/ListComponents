@@ -8,6 +8,14 @@ import {
   useGlobalFilter,
 } from "react-table";
 
+import {
+  selectFolder,
+  insertFolder,
+  updateFolder,
+  deleteFolder,
+  insertFile,
+} from "../../libs/DbApi";
+
 import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 import moment from "moment";
 
@@ -27,6 +35,7 @@ import DetailItem from "./DetailItem";
 import FolderPath from "./FolderPath";
 import Pagination from "./Pagination";
 import RenderIcon from "./RenderIcon";
+import AddUtility from "./AddUtility";
 
 const Styles = styled.div`
   padding: 1rem;
@@ -99,17 +108,25 @@ const Styles = styled.div`
   }
 `;
 
+const CONTENTS_TYPE = 1; //1: 파일, 2: 노트
+
 const Table = ({
   columns,
   setColumns,
   data,
   setData,
-  searchFilter,
-  path,
-  pagination,
   resizeWidth,
+  useAddPopup,
+  useSearchFilter,
+  useFolderPath,
+  usePagination,
 }) => {
-  const [currentPath, setCurrentPath] = useState("root");
+  const [currentFolder, setCurrentFolder] = useState({
+    pk: 0,
+    name: "root",
+    parentKey: -1,
+  }); //현재 폴더
+
   const [currentPage, setCurrentPage] = useState(1);
   const [maximumRow, setMaximumRow] = useState(10);
   const [totalRowCount, setTotalRowCount] = useState(30);
@@ -118,6 +135,10 @@ const Table = ({
   const [isOpenDetailModal, setIsOpenDetailModal] = useState(false);
   const [modalData, setModalData] = useState();
   const [showContextMenu, setShowContextMenu] = useState(false);
+
+  useEffect(() => {
+    refreshView();
+  }, [currentFolder]);
 
   useEffect(() => {
     const noShowingColumns = columns.filter((e) => !e.show);
@@ -223,10 +244,6 @@ const Table = ({
     console.log("Page Changed - Get Item List", currentPage, totalRowCount);
   }, [currentPage]);
 
-  useEffect(() => {
-    console.log("Path Changed - Get Item List", currentPath);
-  }, [currentPath]);
-
   const moveColumn = useCallback(
     (item, newIndex) => {
       const newOrder = headerGroups[0].headers.map((header) => header.id);
@@ -240,6 +257,35 @@ const Table = ({
     },
     [state, setColumnOrder]
   );
+
+  const refreshView = () => {
+    let items = [];
+
+    selectFolder(currentFolder.pk, CONTENTS_TYPE, true).then((res) => {
+      res.data.folders.map((item, idx) => {
+        items.push({
+          id: idx,
+          name: item.name,
+          extension: item.extension,
+          lastwork: item.lastwork,
+          status: 1,
+        });
+      });
+
+      res.data.contents.map((item, idx) => {
+        items.push({
+          id: items.length + 1,
+          name: item.name,
+          extension: item.extension,
+          lastwork: item.lastwork,
+          status: 1,
+        });
+      });
+
+      // setFolders(res.data.folders);
+      // setContents(res.data.contents);
+    });
+  };
 
   const moveRow = (dragIndex, hoverIndex, item, row) => {
     if (dragIndex === hoverIndex) {
@@ -291,7 +337,6 @@ const Table = ({
         title: files[i].name,
         type: "file",
         modified: moment(files[i].lastModified).format("YYYY-MM-DD"),
-        path: currentPath,
         status: 0,
       });
       rowIndex++;
@@ -303,11 +348,18 @@ const Table = ({
   return (
     <>
       <DndProvider backend={HTML5Backend}>
-        {searchFilter && <Search onSubmit={setGlobalFilter} />}
-        {path && (
+        {useSearchFilter && <Search onSubmit={setGlobalFilter} />}
+        {useAddPopup && (
+          <AddUtility
+            refreshView={refreshView}
+            CONTENTS_TYPE={CONTENTS_TYPE}
+            currentFolder={currentFolder}
+          />
+        )}
+        {useFolderPath && (
           <FolderPath
-            currentPath={currentPath}
-            setCurrentPath={setCurrentPath}
+            currentFolder={currentFolder}
+            setCurrentFolder={setCurrentFolder}
             checkList={checkList}
           />
         )}
@@ -412,7 +464,7 @@ const Table = ({
                         prepareRow={prepareRow}
                         setModalData={setModalData}
                         setData={setData}
-                        setCurrentPath={setCurrentPath}
+                        setCurrentFolder={setCurrentFolder}
                         resizeWidth={resizeWidth}
                         {...row.getRowProps()}
                       />
@@ -424,7 +476,7 @@ const Table = ({
           <Preview checkList={checkList} />
         </Styles>
       </DndProvider>
-      {pagination && (
+      {usePagination && (
         <Pagination
           totalCount={totalRowCount}
           limit={maximumRow}

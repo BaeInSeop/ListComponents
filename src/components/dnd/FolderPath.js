@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { DndProvider, useDrag, useDrop } from "react-dnd";
 import DropPathName from "./DropPathName";
 
-const Path = ({ currentPath, setCurrentPath, checkList }) => {
+const Path = ({ currentFolder, setCurrentFolder, checkList }) => {
   const [separatePath, setSeparatePath] = useState([]);
   // const ref = useRef([]);
 
@@ -29,7 +29,8 @@ const Path = ({ currentPath, setCurrentPath, checkList }) => {
       goPath += `${separatePath[i]}${i !== index ? "/" : ""}`;
     }
 
-    setCurrentPath(goPath);
+    console.log("폴더 변경 처리 필요");
+    // setCurrentFolder()
   };
 
   const drawPath = () =>
@@ -37,7 +38,7 @@ const Path = ({ currentPath, setCurrentPath, checkList }) => {
       return (
         <DropPathName
           checkList={checkList}
-          currentPath={currentPath}
+          currentFolder={currentFolder}
           separatePath={separatePath}
           path={path}
           onMovePath={onMovePath}
@@ -59,8 +60,8 @@ const Path = ({ currentPath, setCurrentPath, checkList }) => {
     });
 
   useEffect(() => {
-    setSeparatePath(currentPath.split("/"));
-  }, [currentPath]);
+    setSeparatePath(currentFolder.split("/"));
+  }, [currentFolder]);
 
   return <div>{0 < separatePath.length && drawPath()}</div>;
 };

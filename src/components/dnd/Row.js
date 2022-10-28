@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { getEmptyImage } from "react-dnd-html5-backend";
+import axios from "axios";
+
 import RenderIcon from "./RenderIcon";
 import ReactLoading from "react-loading";
 
@@ -13,7 +15,7 @@ const Row = ({
   checkList,
   setCheckList,
   setModalData,
-  setCurrentPath,
+  setCurrentFolder,
   resizeWidth,
 }) => {
   const dropRef = useRef(null);
@@ -98,8 +100,14 @@ const Row = ({
       console.log("Clicked Item : ", row);
       if ("folder" === row.original.type) {
         console.log("Click Folder - Get File from DB");
-        setCurrentPath(`${row.original.path}/${row.original.title}`);
+        console.log("폴더 이동 처리 필요");
+        // setCurrentFolder(`${row.original.path}/${row.original.title}`);
       } else {
+        axios.get(`/api/google/download/${row.id}`).then(({ data }) => {
+          if (data.resCode === 200) {
+            console.log(data.resData["to"]);
+          }
+        });
         setCheckList([row.id]);
       }
     } else {
@@ -181,9 +189,9 @@ const Row = ({
                 }}
                 className="td"
               >
-                {"Type" === cell.column.Header ? (
+                {"Extension" === cell.column.Header ? (
                   <RenderIcon type={cell.value} cursor={false} size="20px" />
-                ) : "Title" === cell.column.Header ? (
+                ) : "Name" === cell.column.Header ? (
                   <div
                     style={{
                       display: "flex",

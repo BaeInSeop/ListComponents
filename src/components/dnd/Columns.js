@@ -47,7 +47,6 @@ const Columns = ({ state, column, index, moveColumn }) => {
         ref={ref}
         {...column.getHeaderProps(column.getSortByToggleProps())}
         className="th"
-        onDragStart={(e) => (isDragging ? e.stopPropagation() : null)}
       >
         {memoizedColumn}
         <span>

@@ -104,19 +104,16 @@ const Table = ({
   setColumns,
   data,
   setData,
-  currentPath,
-  setCurrentPath,
-  checkList,
-  setCheckList,
   searchFilter,
   path,
   pagination,
+  resizeWidth,
 }) => {
-  const resizeWidth = process.env.REACT_APP_RESIZING_WIDTH;
-
+  const [currentPath, setCurrentPath] = useState("root");
   const [currentPage, setCurrentPage] = useState(1);
   const [maximumRow, setMaximumRow] = useState(10);
   const [totalRowCount, setTotalRowCount] = useState(30);
+  const [checkList, setCheckList] = useState([]);
 
   const [isOpenDetailModal, setIsOpenDetailModal] = useState(false);
   const [modalData, setModalData] = useState();
@@ -127,6 +124,7 @@ const Table = ({
     "title",
     "type",
     "modified",
+    "action,",
   ]);
 
   useEffect(() => {
@@ -202,10 +200,10 @@ const Table = ({
       data,
       columns,
       // getRowId,
-      initialState: {
-        columnOrder: initialColumnOrder,
-      },
-      defaultColumn: defaultSize,
+      // initialState: {
+      //   columnOrder: initialColumnOrder,
+      // },
+      defaultCanSort: true,
     },
     useColumnOrder,
     useBlockLayout,
@@ -329,7 +327,11 @@ const Table = ({
           <div
             {...getTableProps()}
             className="table"
-            style={{ pointerEvents: showContextMenu ? "none" : "initial" }}
+            style={{
+              pointerEvents: showContextMenu ? "none" : "initial",
+              userSelect: "none",
+              WebkitUserSelect: "none",
+            }}
           >
             <ContextMenuTrigger
               id="same_unique_identifier"
@@ -379,8 +381,6 @@ const Table = ({
                         key={column.id}
                         column={column}
                         index={idx}
-                        initialColumnOrder={initialColumnOrder}
-                        setInitialColumnOrder={setInitialColumnOrder}
                       />
                     ))}
                   </div>
@@ -425,6 +425,7 @@ const Table = ({
                         setModalData={setModalData}
                         setData={setData}
                         setCurrentPath={setCurrentPath}
+                        resizeWidth={resizeWidth}
                         {...row.getRowProps()}
                       />
                     )

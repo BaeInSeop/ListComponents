@@ -2,7 +2,8 @@ import React from "react";
 import { FcAudioFile, FcFolder, FcImageFile, FcFile } from "react-icons/fc";
 import { BsCheck } from "react-icons/bs";
 import { BiDotsVerticalRounded } from "react-icons/bi";
-import { GrDocumentPdf, GrNotes } from "react-icons/gr";
+import { GrDocumentPdf, GrNotes, GrUpdate } from "react-icons/gr";
+import { MdDeleteOutline } from "react-icons/md";
 
 const RenderIcon = ({ type, size }) => {
   switch (type) {
@@ -29,6 +30,12 @@ const RenderIcon = ({ type, size }) => {
 
     case "image":
       return <FcImageFile size={size ? size : "20px"} />;
+
+    case "update":
+      return <GrUpdate size={size ? size : "20px"} />;
+
+    case "delete":
+      return <MdDeleteOutline size={size ? size : "20px"} />;
 
     default:
       return type;

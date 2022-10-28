@@ -14,8 +14,8 @@ const Row = ({
   setCheckList,
   setModalData,
   setCurrentPath,
+  resizeWidth,
 }) => {
-  const resizeWidth = process.env.REACT_APP_RESIZING_WIDTH;
   const dropRef = useRef(null);
   const dragRef = useRef(null);
   const inputRef = useRef(null);
@@ -133,6 +133,7 @@ const Row = ({
       style={{
         fontWeight: isDragging ? "bold" : "",
         border: row.original.id === enterFolderIndex ? "1px solid red" : "none",
+        userSelect: "none",
       }}
       className="tr"
     >
@@ -204,6 +205,11 @@ const Row = ({
                         )}
                       </span>
                     )}
+                  </div>
+                ) : "Action" === cell.column.Header ? (
+                  <div style={{ display: "flex", gap: "20px" }}>
+                    <RenderIcon type={"update"} size="15px" />
+                    <RenderIcon type={"delete"} size="15px" />
                   </div>
                 ) : (
                   cell.render("Cell")

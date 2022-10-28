@@ -1,7 +1,9 @@
 {
-  "name": "dragndrop",
-  "version": "0.1.0",
-  "private": true,
+  "name": "@bis0212/listcomponents",
+  "version": "0.1.4",
+  "private": false,
+  "module": "dist/index.js",
+  "main": "dist/index.js",
   "dependencies": {
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^13.0.0",
@@ -28,7 +30,13 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "publish:npm": "mkdir dist && babel src/components -d dist --copy-files"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-react"
+    ]
   },
   "eslintConfig": {
     "extends": [
@@ -53,15 +61,5 @@
     "@babel/preset-env": "^7.19.4",
     "@babel/preset-react": "^7.18.6",
     "cross-env": "^7.0.3"
-  },
-  "main": "dist/index.js",
-  "private": false,
-  "files": [
-    "dist",
-    "README.md"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/BaeInSeop/ListComponents"
   }
 }

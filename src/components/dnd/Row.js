@@ -106,6 +106,7 @@ const Row = ({
       console.log("Cannot Open Item");
     }
   };
+
   const opacity = isDragging ? 0 : 1;
 
   // preview(drop(dropRef));

@@ -119,22 +119,10 @@ const Table = ({
   const [modalData, setModalData] = useState();
   const [showContextMenu, setShowContextMenu] = useState(false);
 
-  const [initialColumnOrder, setInitialColumnOrder] = useState([
-    "id",
-    "title",
-    "type",
-    "modified",
-    "action,",
-  ]);
-
   useEffect(() => {
     const noShowingColumns = columns.filter((e) => !e.show);
     setHiddenColumns(noShowingColumns.map((column) => column.accessor));
   }, [columns]);
-
-  useEffect(() => {
-    console.log("searchFilter : ", searchFilter);
-  }, [searchFilter]);
 
   const defaultSize = useMemo(() => ({
     minWidth: 80,

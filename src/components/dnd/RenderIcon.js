@@ -5,37 +5,42 @@ import { BiDotsVerticalRounded } from "react-icons/bi";
 import { GrDocumentPdf, GrNotes, GrUpdate } from "react-icons/gr";
 import { MdDeleteOutline } from "react-icons/md";
 
-const RenderIcon = ({ type, size }) => {
+const RenderIcon = ({ type, cursor, size }) => {
+  const style = {
+    cursor: cursor ? "pointer" : "default",
+    width: size ? size : "20px",
+    height: size ? size : "20px",
+  };
   switch (type) {
     case "audio":
-      return <FcAudioFile size={size ? size : "20px"} />;
+      return <FcAudioFile style={style} />;
 
     case "file":
-      return <FcFile size={size ? size : "20px"} />;
+      return <FcFile style={style} />;
 
     case "folder":
-      return <FcFolder size={size ? size : "20px"} />;
+      return <FcFolder style={style} />;
 
     case "note":
-      return <GrNotes size={size ? size : "20px"} />;
+      return <GrNotes style={style} />;
 
     case "pdf":
-      return <GrDocumentPdf size={size ? size : "20px"} />;
+      return <GrDocumentPdf style={style} />;
 
     case "dot":
-      return <BiDotsVerticalRounded size={size ? size : "20px"} />;
+      return <BiDotsVerticalRounded style={style} />;
 
     case "check":
-      return <BsCheck size={size ? size : "20px"} />;
+      return <BsCheck style={style} />;
 
     case "image":
-      return <FcImageFile size={size ? size : "20px"} />;
+      return <FcImageFile style={style} />;
 
     case "update":
-      return <GrUpdate size={size ? size : "20px"} />;
+      return <GrUpdate style={style} />;
 
     case "delete":
-      return <MdDeleteOutline size={size ? size : "20px"} />;
+      return <MdDeleteOutline style={style} />;
 
     default:
       return type;

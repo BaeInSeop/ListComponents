@@ -107,6 +107,14 @@ const Row = ({
     }
   };
 
+  const onUpdateItem = (row) => {
+    console.log("on Update Item - ", row);
+  };
+
+  const onDeleteItem = (row) => {
+    console.log("on Delete Item - ", row);
+  };
+
   const opacity = isDragging ? 0 : 1;
 
   // preview(drop(dropRef));
@@ -165,9 +173,16 @@ const Row = ({
           prepareRow(row);
           return (
             <>
-              <div {...cell.getCellProps()} className="td">
+              <div
+                {...cell.getCellProps()}
+                style={{
+                  ...cell.getCellProps().style,
+                  verticalAlign: "bottom",
+                }}
+                className="td"
+              >
                 {"Type" === cell.column.Header ? (
-                  <RenderIcon type={cell.value} size="20px" />
+                  <RenderIcon type={cell.value} cursor={false} size="20px" />
                 ) : "Title" === cell.column.Header ? (
                   <div
                     style={{
@@ -202,16 +217,25 @@ const Row = ({
                     ) : (
                       <span onClick={() => setModalData(row.original)}>
                         {isMouseOverDiv && (
-                          <RenderIcon type={"dot"} size="15px" />
+                          <RenderIcon type={"dot"} cursor={true} size="15px" />
                         )}
                       </span>
                     )}
                   </div>
                 ) : "Action" === cell.column.Header ? (
-                  <div style={{ display: "flex", gap: "20px" }}>
-                    <RenderIcon type={"update"} size="15px" />
-                    <RenderIcon type={"delete"} size="15px" />
-                  </div>
+                  <>
+                    <button onClick={(e) => onUpdateItem(row)}>
+                      <RenderIcon type={"update"} size="15px" cursor={true} />
+                    </button>
+                    <button onClick={(e) => onDeleteItem(row)}>
+                      <RenderIcon
+                        type={"delete"}
+                        size="15px"
+                        cursor={true}
+                        onClick={(e) => onDeleteItem(row)}
+                      />
+                    </button>
+                  </>
                 ) : (
                   cell.render("Cell")
                 )}

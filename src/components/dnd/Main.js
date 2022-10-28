@@ -17,6 +17,7 @@ function Main() {
     {
       Header: "Type",
       accessor: "type",
+      minWidth: 50,
       width: 50,
       disableResizing: false,
       show: true,
@@ -25,6 +26,7 @@ function Main() {
     {
       Header: "Modified",
       accessor: "modified",
+      minWidth: 100,
       width: 150,
       disableResizing: false,
       show: true,
@@ -40,6 +42,14 @@ function Main() {
     },
   ]);
 
+  // {
+  //   "id": 0,
+  //   "title": "Test_File",
+  //   "type": "file",
+  //   "modified": "2022-10-17",
+  //   "path": "home",
+  //   "status": 0
+  // },
   const [data, setData] = useState(dummyData.home);
 
   return (

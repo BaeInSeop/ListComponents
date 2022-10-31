@@ -10,43 +10,54 @@ function ListComponent({
   useAddPopup,
   useFolderPath,
   usePagination,
+  onChangeColumnWidth,
+  onChangeColumnOrder,
+  onAddFolder,
+  onMoveRow,
+  onMoveItemToFolder,
+  onChangeHiddenColumn,
+  onChangeCurrentPage,
+  onChangePath,
+  onUpdateItem,
+  onDeleteItem,
+  onClickItem,
 }) {
   const [columns, setColumns] = useState(
     header
       ? header
       : [
           {
-            Header: "Name",
+            header: "Name",
             accessor: "name",
             maxWidth: 400,
             minWidth: 140,
             width: 300,
             disableResizing: false,
             show: true,
-            disableSortBy: false,
+            disableSortBy: true,
           },
           {
-            Header: "Extension",
+            header: "Extension",
             accessor: "extension",
-            minWidth: 100,
-            width: 100,
+            // minWidth: 100,
+            // width: 100,
             disableResizing: false,
             show: true,
             disableSortBy: false,
           },
           {
-            Header: "LastWork",
+            header: "LastWork",
             accessor: "lastwork",
-            minWidth: 100,
-            width: 150,
+            // minWidth: 100,
+            // width: 150,
             disableResizing: false,
             show: true,
             disableSortBy: false,
           },
           {
-            Header: "Action",
+            header: "Action",
             accessor: "action",
-            width: 150,
+            // width: 150,
             disableResizing: true,
             show: true,
             disableSortBy: true,
@@ -90,51 +101,95 @@ function ListComponent({
         resizeWidth={resizeWidth ? resizeWidth : "3px"}
         maximumRowCount={10}
         totalCount={30}
-        useAddPopup={true}
-        useSearchFilter={true}
-        useFolderPath={true}
-        usePagination={true}
-        onChangeColumnWidth={(column) => {
-          console.log("Change Column Width : ", column);
-        }}
-        onChangeColumnOrder={(column) => {
-          console.log("Change Column Order : ", column);
-        }}
-        onAddFolder={(currentFolder) => {
-          console.log("Add Folder in this Path : ", currentFolder);
-        }}
-        onMoveRow={(dragIndex, hoverIndex) => {
-          console.log("onMoveRow", dragIndex, hoverIndex);
-        }}
-        onMoveItemToFolder={(checklist, row) => {
-          console.log("Move Checklist File to Folder : ", checklist, row);
-        }}
-        onChangeHiddenColumn={(column) => {
-          console.log("Change Hidden Column : ", column);
-        }}
-        onChangeCurrentPage={(page) => {
-          console.log("Change Page : ", page);
-        }}
-        onChangePath={(path) => {
-          console.log("Change Path : ", path);
-        }}
-        onUpdateItem={(row) => {
-          console.log("Update Item : ", row);
-        }}
-        onDeleteItem={(row) => {
-          console.log("Delete Item : ", row);
-        }}
-        onClickItem={(item) => {
-          if (1 === item.original.status) {
-            if ("folder" === item.original.extension) {
-              console.log("Folder Click : ", item);
-            } else {
-              console.log("on Item Click : ", item);
-            }
-          } else {
-            console.log("Cannot Use Item : ", item);
-          }
-        }}
+        useAddPopup={useAddPopup ? useAddPopup : true}
+        useSearchFilter={useSearchFilter ? useSearchFilter : true}
+        useFolderPath={useFolderPath ? useFolderPath : true}
+        usePagination={usePagination ? usePagination : true}
+        onChangeColumnWidth={
+          onChangeColumnWidth
+            ? onChangeColumnWidth
+            : (column) => {
+                console.log("Change Column Width : ", column);
+              }
+        }
+        onChangeColumnOrder={
+          onChangeColumnOrder
+            ? onChangeColumnOrder
+            : (column) => {
+                console.log("Change Column Order : ", column);
+              }
+        }
+        onAddFolder={
+          onAddFolder
+            ? onAddFolder
+            : (currentFolder) => {
+                console.log("Add Folder in this Path : ", currentFolder);
+              }
+        }
+        onMoveRow={
+          onMoveRow
+            ? onMoveRow
+            : (dragIndex, hoverIndex) => {
+                console.log("onMoveRow", dragIndex, hoverIndex);
+              }
+        }
+        onMoveItemToFolder={
+          onMoveItemToFolder
+            ? onMoveItemToFolder
+            : (checklist, row) => {
+                console.log("Move Checklist File to Folder : ", checklist, row);
+              }
+        }
+        onChangeHiddenColumn={
+          onChangeHiddenColumn
+            ? onChangeHiddenColumn
+            : (column) => {
+                console.log("Change Hidden Column : ", column);
+              }
+        }
+        onChangeCurrentPage={
+          onChangeCurrentPage
+            ? onChangeCurrentPage
+            : (page) => {
+                console.log("Change Page : ", page);
+              }
+        }
+        onChangePath={
+          onChangePath
+            ? onChangePath
+            : (path) => {
+                console.log("Change Path : ", path);
+              }
+        }
+        onUpdateItem={
+          onUpdateItem
+            ? onUpdateItem
+            : (row) => {
+                console.log("Update Item : ", row);
+              }
+        }
+        onDeleteItem={
+          onDeleteItem
+            ? onDeleteItem
+            : (row) => {
+                console.log("Delete Item : ", row);
+              }
+        }
+        onClickItem={
+          onClickItem
+            ? onClickItem
+            : (item) => {
+                if (1 === item.original.status) {
+                  if ("folder" === item.original.extension) {
+                    console.log("Folder Click : ", item);
+                  } else {
+                    console.log("on Item Click : ", item);
+                  }
+                } else {
+                  console.log("Cannot Use Item : ", item);
+                }
+              }
+        }
       />
     </div>
   );

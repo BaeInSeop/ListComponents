@@ -271,7 +271,7 @@ const Table = ({
 
   // 컨텍스트 메뉴 - 활성화된 컬럼인지 체크
   const isShowingColumn = (column) => {
-    const col = columns.find((item) => item.Header === column);
+    const col = columns.find((item) => item.header === column);
 
     return col.show ? true : false;
   };
@@ -393,8 +393,8 @@ const Table = ({
                     data={{ accessor: column.accessor }}
                     onClick={onClickContextMenu}
                   >
-                    {column.Header}
-                    {isShowingColumn(column.Header) && (
+                    {column.header}
+                    {isShowingColumn(column.header) && (
                       <span>
                         <RenderIcon type="check" size="20px" />
                       </span>

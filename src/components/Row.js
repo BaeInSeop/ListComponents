@@ -183,9 +183,9 @@ const Row = ({
                 }}
                 className="td"
               >
-                {"Extension" === cell.column.Header ? (
+                {"Extension" === cell.column.header ? (
                   <RenderIcon type={cell.value} cursor={false} size="20px" />
-                ) : "Name" === cell.column.Header ? (
+                ) : "Name" === cell.column.header ? (
                   <div
                     style={{
                       display: "flex",
@@ -224,7 +224,7 @@ const Row = ({
                       </span>
                     )}
                   </div>
-                ) : "Action" === cell.column.Header ? (
+                ) : "Action" === cell.column.header ? (
                   <>
                     <button onClick={(e) => onUpdateClick(row)}>
                       <RenderIcon type={"update"} size="15px" cursor={true} />

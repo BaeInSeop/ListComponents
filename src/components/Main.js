@@ -4,7 +4,9 @@ import ListComponent from "./ListComponent";
 const Main = () => {
   return (
     <div>
-      <ListComponent />
+      <ListComponent
+      // onChangeColumnWidth={(column) => console.log("column", column)}
+      />
     </div>
   );
 };

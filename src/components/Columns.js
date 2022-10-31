@@ -4,7 +4,7 @@ import { getEmptyImage } from "react-dnd-html5-backend";
 
 const Columns = ({ state, column, index, moveColumn }) => {
   const ref = useRef();
-  const { id, Header } = column;
+  const { id, header } = column;
 
   const [, drop] = useDrop({
     accept: "column",
@@ -19,7 +19,7 @@ const Columns = ({ state, column, index, moveColumn }) => {
       return {
         id,
         index,
-        header: Header,
+        header: header,
         type: "column",
       };
     },
@@ -30,7 +30,7 @@ const Columns = ({ state, column, index, moveColumn }) => {
 
   drag(drop(ref));
 
-  const memoizedColumn = useMemo(() => column.render("Header"), [column]);
+  const memoizedColumn = useMemo(() => column.render("header"), [column]);
   const opacity = isDragging ? 0 : 1;
 
   useEffect(() => {

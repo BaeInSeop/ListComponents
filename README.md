@@ -2,79 +2,87 @@
 
 ## How To Install
 
-### npm i @bis0212/listcomponents
+```
+# NPM
+npm npm i @bis0212/listcomponents
 
-or
-
-### yarn add @bis0212/listcomponents
-
-## Usage
-
-```js
- import ListComponent from "./components/dnd/ListComponent";
-    ...
- return <ListComponent />;
+# Yarn
+yarn add @bis0212/listcomponents
 ```
 
-### `yarn start`
+## Example
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+```js
+ import ListComponent from "@bis0212/listcomponents";
+    ...
+ return <ListComponent
+   header = {[]}
+   items = {[]}
+   resizeWidth = {3}
+   maximumRowCount = {10}
+   totalCount={30}
+   useAddPopup = {true}
+   useSearchFilter = {true}
+   useFolderPath = {true}
+   usePagination = {true}
+   onChangeColumnWidth = {(column) => {}}
+   onChangeColumnOrder = {(column) => {}}
+   onAddFolder = {(currentFolder) => {}}
+   onMoveRow = {(dragIndex, hoverIndex) => {}}
+   onMoveItemToFolder = {(checkList, row) => {}}
+   onChangeHiddenColumn = {(column) => {}}
+   onChangeCurrentPage = {(page) => {}}
+   onChangePath = {(path) => {}}
+   onUpdateItem = {(item) => {}}
+   onDeleteItem = {(item) => {}}
+   onClickItem ={(item) => {}}
+    />;
+```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## `Props`
 
-### `yarn test`
+| Key                  | Required |     Type | Desc                                | Default |
+| -------------------- | :------: | -------: | ----------------------------------- | ------- |
+| header               |    V     |    Array | Define Column Information           |         |
+| items                |    V     |    Array | Define Row Information              |         |
+| resizeWidth          |          |   Number | Resizing border width               | 10      |
+| maximumRowCount      |          |   Number | display Item Count                  | 100     |
+| useAddPopup          |          |  Boolean | Display Add Utility Button          | true    |
+| useSearchFilter      |          |  Boolean | Display Search Filter               | true    |
+| useFolderPath        |          |  Boolean | Display Folder Path                 | true    |
+| usePagination        |          |  Boolean | Display Pagination                  | true    |
+| onChangeColumnWidth  |          | Function | Callback when changed Column Width  |         |
+| onChangeColumnOrder  |          | Function | Callback when changed Column Order  |         |
+| onAddFolder          |          | Function | Callback when Add Folder            |         |
+| onMoveRow            |          | Function | Callback when Move Row              |         |
+| onMoveItemToFolder   |          | Function | Callback when Item Move into Folder |         |
+| onChangeHiddenColumn |          | Function | Callback when Change Hidden Column  |         |
+| onChangeCurrentPage  |          | Function | Callback when Change Current Page   |         |
+| onChangePath         |          | Function | Callback when Change Path           |         |
+| onUpdateItem         |          | Function | Callback when Update Item           |         |
+| onDeleteItem         |          | Function | Callback when Delete Item           |         |
+| onClickItem          |          | Function | Callback when Click Item            |         |
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## `header - Props`
 
-### `yarn build`
+| Key             | Required |    Type | Example              | Default |
+| --------------- | :------: | ------: | -------------------- | ------- |
+| header          |    V     |  String | Name, Title, etc ... |         |
+| accessor        |    V     |  String | name, title, etc ... |         |
+| maxWidth        |          |  Number | 50, 300, etc...      |         |
+| minWidth        |          |  Number | 50, 300, etc...      |         |
+| width           |          |  Number | 50, 300, etc...      | 150     |
+| disableResizing |          | Boolean | true, false          | false   |
+| show            |          | Boolean | true, false          | false   |
+| disableSortBy   |          | Boolean | true, false          | false   |
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## `items - Props`
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+| Key       | Required |   Type | Example                                           |
+| --------- | :------: | -----: | ------------------------------------------------- |
+| id        |    V     | Number | 0,1,2 etc ...                                     |
+| name      |    V     | String | "Test_File", "Test_Folder" etc ...                |
+| extension |    V     | String | "folder", "file", "note", "pdf" etc...            |
+| lastwork  |    V     |   Date | new Date()                                        |
+| path      |    V     | String | 'home', 'home/Test_Folder', etc ...               |
+| status    |    V     | Number | 0, 1, 2 (0 - Not Use / 1 - Can Use / 2 - Loading) |

@@ -5,7 +5,6 @@
   "module": "dist/index.js",
   "main": "dist/index.js",
   "dependencies": {
-    "@bis0212/listcomponents": "^0.1.12",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^13.0.0",
     "@testing-library/user-event": "^13.2.1",

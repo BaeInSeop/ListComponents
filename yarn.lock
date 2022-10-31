@@ -1206,37 +1206,6 @@
   resolved "https://registry.npmjs.org/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@bis0212/listcomponents@^0.1.11", "@bis0212/listcomponents@^0.1.12":
-  version "0.1.12"
-  resolved "https://registry.yarnpkg.com/@bis0212/listcomponents/-/listcomponents-0.1.12.tgz#12f34f0a595df4ea917ea18673bd2f4577c702c0"
-  integrity sha512-FWqCsGpriKduzVwoiz+CEj6DIFOt1WwB5I12vLMWvte0p4ViF4/CpLJY6C5k3sCqMcXI2LmVXdB2Nuou8y55gA==
-  dependencies:
-    "@bis0212/listcomponents" "^0.1.11"
-    "@testing-library/jest-dom" "^5.14.1"
-    "@testing-library/react" "^13.0.0"
-    "@testing-library/user-event" "^13.2.1"
-    axios "^1.1.3"
-    crypto "^1.0.1"
-    immutability-helper "^3.1.1"
-    moment "^2.29.4"
-    namor "^2.0.4"
-    path "^0.12.7"
-    path-browserify "^1.0.1"
-    react "^18.2.0"
-    react-contextmenu "^2.14.0"
-    react-dnd "^16.0.1"
-    react-dnd-html5-backend "^16.0.1"
-    react-dom "^18.2.0"
-    react-file-drop "^3.1.6"
-    react-icons "^4.6.0"
-    react-loading "^2.0.3"
-    react-modal "^3.16.1"
-    react-scripts "4.0.3"
-    react-table "^7.8.0"
-    reactjs-popup "^2.0.5"
-    styled-components "^5.3.6"
-    web-vitals "^2.1.0"
-
 "@cnakazawa/watch@^1.0.3":
   version "1.0.4"
   resolved "https://registry.npmjs.org/@cnakazawa/watch/-/watch-1.0.4.tgz"

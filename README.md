@@ -1,10 +1,20 @@
-# Getting Started with Create React App
+# @bis0212/ListComponents
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## How To Install
 
-## Available Scripts
+### npm i @bis0212/listcomponents
 
-In the project directory, you can run:
+or
+
+### yarn add @bis0212/listcomponents
+
+## Usage
+
+```js
+ import ListComponent from "./components/dnd/ListComponent";
+    ...
+ return <ListComponent />;
+```
 
 ### `yarn start`
 

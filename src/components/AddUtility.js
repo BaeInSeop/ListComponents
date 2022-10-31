@@ -2,9 +2,8 @@ import React from "react";
 import styled from "styled-components";
 import Popup from "reactjs-popup";
 import RenderIcon from "./RenderIcon";
-import { insertFolder } from "../../libs/DbApi";
 
-const AddUtility = ({ refreshView, CONTENTS_TYPE, currentFolder }) => {
+const AddUtility = ({ currentFolder, onAddFolder }) => {
   const StyledButton = styled.button`
     width: 88px;
     height: 26px;
@@ -52,23 +51,9 @@ const AddUtility = ({ refreshView, CONTENTS_TYPE, currentFolder }) => {
     }
   `;
 
+  // 폴더 추가 처리
   const onInsertFolder = () => {
-    var folderName = prompt("폴더명", "");
-    var folder = {
-      name: folderName,
-      parentKey: currentFolder.pk,
-      type: CONTENTS_TYPE,
-    };
-
-    insertFolder(folder).then((res) => {
-      if (res.code === 0) {
-        refreshView();
-      } else if (res.code === 100) {
-        alert("이름 중복됨");
-      } else {
-        alert(res.desc);
-      }
-    });
+    onAddFolder(currentFolder);
   };
 
   return (

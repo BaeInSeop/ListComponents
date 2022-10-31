@@ -17,6 +17,9 @@ const Row = ({
   setModalData,
   setCurrentFolder,
   resizeWidth,
+  onUpdateItem,
+  onDeleteItem,
+  onClickItem,
 }) => {
   const dropRef = useRef(null);
   const dragRef = useRef(null);
@@ -73,7 +76,7 @@ const Row = ({
       }
       // Time to actually perform the action
 
-      if ("folder" === rows[hoverIndex].original.type) {
+      if ("folder" === rows[hoverIndex].original.extension) {
         setEnterFolderIndex(rows[hoverIndex].original.id);
       } else {
         setEnterFolderIndex(null);
@@ -95,32 +98,23 @@ const Row = ({
     }),
   });
 
-  const onClickItem = (row) => {
+  const clickItem = (row) => {
+    onClickItem(row);
     if (1 === row.original.status) {
-      console.log("Clicked Item : ", row);
-      if ("folder" === row.original.type) {
-        console.log("Click Folder - Get File from DB");
-        console.log("폴더 이동 처리 필요");
-        // setCurrentFolder(`${row.original.path}/${row.original.title}`);
+      if ("folder" === row.original.extension) {
+        setCurrentFolder(`${row.original.path}/${row.original.name}`);
       } else {
-        axios.get(`/api/google/download/${row.id}`).then(({ data }) => {
-          if (data.resCode === 200) {
-            console.log(data.resData["to"]);
-          }
-        });
         setCheckList([row.id]);
       }
-    } else {
-      console.log("Cannot Open Item");
     }
   };
 
-  const onUpdateItem = (row) => {
-    console.log("on Update Item - ", row);
+  const onUpdateClick = (row) => {
+    onUpdateItem(row);
   };
 
-  const onDeleteItem = (row) => {
-    console.log("on Delete Item - ", row);
+  const onDeleteClick = (row) => {
+    onDeleteItem(row);
   };
 
   const opacity = isDragging ? 0 : 1;
@@ -208,7 +202,7 @@ const Row = ({
                       }}
                       onMouseOver={() => setIsMouseOverSpan(true)}
                       onMouseLeave={() => setIsMouseOverSpan(false)}
-                      onClick={(e) => onClickItem(row)}
+                      onClick={(e) => clickItem(row)}
                     >
                       {cell.render("Cell")}
                     </span>
@@ -232,15 +226,15 @@ const Row = ({
                   </div>
                 ) : "Action" === cell.column.Header ? (
                   <>
-                    <button onClick={(e) => onUpdateItem(row)}>
+                    <button onClick={(e) => onUpdateClick(row)}>
                       <RenderIcon type={"update"} size="15px" cursor={true} />
                     </button>
-                    <button onClick={(e) => onDeleteItem(row)}>
+                    <button onClick={(e) => onDeleteClick(row)}>
                       <RenderIcon
                         type={"delete"}
                         size="15px"
                         cursor={true}
-                        onClick={(e) => onDeleteItem(row)}
+                        onClick={(e) => onDeleteClick(row)}
                       />
                     </button>
                   </>

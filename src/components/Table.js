@@ -8,14 +8,6 @@ import {
   useGlobalFilter,
 } from "react-table";
 
-import {
-  selectFolder,
-  insertFolder,
-  updateFolder,
-  deleteFolder,
-  insertFile,
-} from "../../libs/DbApi";
-
 import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 import moment from "moment";
 
@@ -37,6 +29,7 @@ import Pagination from "./Pagination";
 import RenderIcon from "./RenderIcon";
 import AddUtility from "./AddUtility";
 
+// 스타일 설정
 const Styles = styled.div`
   padding: 1rem;
   font-family: Open Sans, sans-serif;
@@ -108,49 +101,60 @@ const Styles = styled.div`
   }
 `;
 
-const CONTENTS_TYPE = 1; //1: 파일, 2: 노트
-
 const Table = ({
   columns,
   setColumns,
   data,
   setData,
   resizeWidth,
+  maximumRowCount,
+  totalCount,
   useAddPopup,
   useSearchFilter,
   useFolderPath,
   usePagination,
+  onChangeColumnWidth,
+  onChangeColumnOrder,
+  onAddFolder,
+  onMoveRow,
+  onMoveItemToFolder,
+  onChangeHiddenColumn,
+  onChangeCurrentPage,
+  onChangePath,
+  onUpdateItem,
+  onDeleteItem,
+  onClickItem,
 }) => {
-  const [currentFolder, setCurrentFolder] = useState({
-    pk: 0,
-    name: "root",
-    parentKey: -1,
-  }); //현재 폴더
+  const [currentFolder, setCurrentFolder] = useState("home"); //현재 폴더
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const [maximumRow, setMaximumRow] = useState(10);
-  const [totalRowCount, setTotalRowCount] = useState(30);
-  const [checkList, setCheckList] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
+  const [maximumRow, setMaximumRow] = useState(maximumRowCount); // 아이템 최대 갯수
+  const [totalRowCount, setTotalRowCount] = useState(totalCount); // 불러온 아이템 최대 개수
+  const [checkList, setCheckList] = useState([]); // 체크된 아이템
 
-  const [isOpenDetailModal, setIsOpenDetailModal] = useState(false);
-  const [modalData, setModalData] = useState();
-  const [showContextMenu, setShowContextMenu] = useState(false);
+  const [isOpenDetailModal, setIsOpenDetailModal] = useState(false); // 상세보기 Open State
+  const [modalData, setModalData] = useState(); // 상세보기 데이터 State
+  const [showContextMenu, setShowContextMenu] = useState(false); // 컨텍스트 메뉴 Open Sate
 
+  // 현재 경로가 변경될 시 목록 최신화
   useEffect(() => {
-    refreshView();
+    onChangePath(currentFolder);
   }, [currentFolder]);
 
+  // Column - Show 항목이 false 인 경우 보여주지 않는 컬럼 설정
   useEffect(() => {
     const noShowingColumns = columns.filter((e) => !e.show);
     setHiddenColumns(noShowingColumns.map((column) => column.accessor));
   }, [columns]);
 
+  // Column 기본 사이즈 설정 (사용 안함)
   const defaultSize = useMemo(() => ({
     minWidth: 80,
     width: 150,
     maxWidth: 400,
   }));
 
+  // 아이템 - 상세보기 처리
   useEffect(() => {
     if (!isOpenDetailModal) {
       setModalData();
@@ -162,36 +166,6 @@ const Table = ({
       setIsOpenDetailModal(true);
     }
   }, [modalData]);
-
-  // const IndeterminateCheckbox = React.forwardRef(
-  //   ({ row, indeterminate, ...rest }, ref) => {
-  //     const defaultRef = React.useRef();
-  //     const resolvedRef = ref || defaultRef;
-
-  //     React.useEffect(() => {
-  //       resolvedRef.current.indeterminate = indeterminate;
-  //     }, [resolvedRef, indeterminate]);
-
-  //     const [isTrue, setIsTrue] = useState(false);
-  //     // const isDisabled = row.orginal.orderAmount > 1;
-
-  //     useEffect(() => {
-  //       if (row?.values?.orderAmount < 2) {
-  //         setIsTrue(true);
-  //       }
-  //     }, [row]);
-  //     return (
-  //       <>
-  //         <input
-  //           type="checkbox"
-  //           ref={resolvedRef}
-  //           {...rest}
-  //           disabled={isTrue}
-  //         />
-  //       </>
-  //     );
-  //   }
-  // );
 
   const {
     getTableProps,
@@ -221,29 +195,31 @@ const Table = ({
     useSortBy
   );
 
+  // Column - 사이즈 변경 시 DB 업데이트
   useEffect(() => {
     if (0 < Object.keys(state.columnResizing.columnWidths).length) {
-      console.log(
-        "DB Update Column Size : ",
-        state.columnResizing.columnWidths
-      );
+      onChangeColumnWidth(state.columnResizing.columnWidths);
     }
   }, [state.columnResizing.columnWidths]);
 
+  // Column - 순서 변경 시 DB 업데이트
   useEffect(() => {
-    console.log("DB Update Column Order : ", state.columnOrder);
+    onChangeColumnOrder(state.columnOrder);
   }, [state.columnOrder]);
 
+  // Column - 숨김 처리 변경 시 DB 업데이트
   useEffect(() => {
     if (0 < state.hiddenColumns.length) {
-      console.log("DB Update HiddenColumn : ", state.hiddenColumns);
+      onChangeHiddenColumn(state.hiddenColumns);
     }
   }, [state.hiddenColumns]);
 
+  // 페이지 변경 시 목록 갱신
   useEffect(() => {
-    console.log("Page Changed - Get Item List", currentPage, totalRowCount);
+    onChangeCurrentPage(currentPage, totalRowCount);
   }, [currentPage]);
 
+  // Column 순서 변경
   const moveColumn = useCallback(
     (item, newIndex) => {
       const newOrder = headerGroups[0].headers.map((header) => header.id);
@@ -258,44 +234,16 @@ const Table = ({
     [state, setColumnOrder]
   );
 
-  const refreshView = () => {
-    let items = [];
-
-    selectFolder(currentFolder.pk, CONTENTS_TYPE, true).then((res) => {
-      res.data.folders.map((item, idx) => {
-        items.push({
-          id: idx,
-          name: item.name,
-          extension: item.extension,
-          lastwork: item.lastwork,
-          status: 1,
-        });
-      });
-
-      res.data.contents.map((item, idx) => {
-        items.push({
-          id: items.length + 1,
-          name: item.name,
-          extension: item.extension,
-          lastwork: item.lastwork,
-          status: 1,
-        });
-      });
-
-      // setFolders(res.data.folders);
-      // setContents(res.data.contents);
-    });
-  };
-
+  // 아이템 - 순서 변경
   const moveRow = (dragIndex, hoverIndex, item, row) => {
     if (dragIndex === hoverIndex) {
       return;
     }
-    if ("folder" === row.original.type) {
-      console.log("DB Update Move Item to Folder", checkList, row);
+    if ("folder" === row.original.extension) {
+      onMoveItemToFolder(checkList, row);
       return;
     } else {
-      console.log("DB Update Change Row : ", dragIndex, hoverIndex);
+      onMoveRow(item, row);
       return;
     }
 
@@ -310,6 +258,7 @@ const Table = ({
     // setData(tempRecords);
   };
 
+  // 컨텍스트 메뉴 클릭
   const onClickContextMenu = (e, data) => {
     const col = columns.find((column) => column.accessor === data.accessor);
 
@@ -320,12 +269,14 @@ const Table = ({
     );
   };
 
+  // 컨텍스트 메뉴 - 활성화된 컬럼인지 체크
   const isShowingColumn = (column) => {
     const col = columns.find((item) => item.Header === column);
 
     return col.show ? true : false;
   };
 
+  // 로컬 파일 드롭
   const onDropFile = (files, event) => {
     console.log("files : ", files);
     let rowIndex = rows.length;
@@ -348,21 +299,24 @@ const Table = ({
   return (
     <>
       <DndProvider backend={HTML5Backend}>
+        {/* 찾기 */}
         {useSearchFilter && <Search onSubmit={setGlobalFilter} />}
+
+        {/* 새로 만들기 팝업 */}
         {useAddPopup && (
-          <AddUtility
-            refreshView={refreshView}
-            CONTENTS_TYPE={CONTENTS_TYPE}
-            currentFolder={currentFolder}
-          />
+          <AddUtility currentFolder={currentFolder} onAddFolder={onAddFolder} />
         )}
+
+        {/* 현재 경로 */}
         {useFolderPath && (
           <FolderPath
             currentFolder={currentFolder}
             setCurrentFolder={setCurrentFolder}
             checkList={checkList}
+            onMoveItemToFolder={onMoveItemToFolder}
           />
         )}
+
         <Styles resizeWidth={resizeWidth}>
           <div
             {...getTableProps()}
@@ -466,6 +420,9 @@ const Table = ({
                         setData={setData}
                         setCurrentFolder={setCurrentFolder}
                         resizeWidth={resizeWidth}
+                        onUpdateItem={onUpdateItem}
+                        onDeleteItem={onDeleteItem}
+                        onClickItem={onClickItem}
                         {...row.getRowProps()}
                       />
                     )
@@ -473,9 +430,13 @@ const Table = ({
               </div>
             </FileDrop>
           </div>
+
+          {/* 드래그 시 UI */}
           <Preview checkList={checkList} />
         </Styles>
       </DndProvider>
+
+      {/* 페이지네이션 */}
       {usePagination && (
         <Pagination
           totalCount={totalRowCount}
@@ -485,6 +446,7 @@ const Table = ({
         />
       )}
 
+      {/* 상세보기 Modal */}
       <RenderModal
         isOpen={isOpenDetailModal}
         setIsOpen={setIsOpenDetailModal}

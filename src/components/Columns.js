@@ -37,10 +37,6 @@ const Columns = ({ state, column, index, moveColumn }) => {
     preview(getEmptyImage(), { captureDraggingState: true });
   }, [preview]);
 
-  const updateColumnWidthToDb = () => {
-    console.log("DB Update Column Size : ", state.columnResizing.columnWidths);
-  };
-
   return (
     <>
       <div

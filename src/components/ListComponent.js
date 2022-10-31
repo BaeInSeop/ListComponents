@@ -6,6 +6,8 @@ function ListComponent({
   header,
   items,
   resizeWidth,
+  maximumRowCount,
+  totalCount,
   useSearchFilter,
   useAddPopup,
   useFolderPath,
@@ -91,6 +93,10 @@ function ListComponent({
   //   "status": 0 - Not Use / 1 - Can Use / 2 - Loading
   // },
 
+  useEffect(() => {
+    console.log("data : ", data);
+  }, [data]);
+
   return (
     <div>
       <Table
@@ -99,8 +105,8 @@ function ListComponent({
         data={data}
         setData={setData}
         resizeWidth={resizeWidth ? resizeWidth : "3px"}
-        maximumRowCount={10}
-        totalCount={30}
+        maximumRowCount={maximumRowCount ? maximumRowCount : 10}
+        totalCount={totalCount ? totalCount : 30}
         useAddPopup={useAddPopup ? useAddPopup : true}
         useSearchFilter={useSearchFilter ? useSearchFilter : true}
         useFolderPath={useFolderPath ? useFolderPath : true}

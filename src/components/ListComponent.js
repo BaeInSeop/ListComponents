@@ -41,8 +41,8 @@ function ListComponent({
           {
             header: "Extension",
             accessor: "extension",
-            // minWidth: 100,
-            // width: 100,
+            minWidth: 100,
+            width: 100,
             disableResizing: false,
             show: true,
             disableSortBy: false,
@@ -50,8 +50,8 @@ function ListComponent({
           {
             header: "LastWork",
             accessor: "lastwork",
-            // minWidth: 100,
-            // width: 150,
+            minWidth: 100,
+            width: 150,
             disableResizing: false,
             show: true,
             disableSortBy: false,
@@ -59,7 +59,7 @@ function ListComponent({
           {
             header: "Action",
             accessor: "action",
-            // width: 150,
+            width: 150,
             disableResizing: true,
             show: true,
             disableSortBy: true,

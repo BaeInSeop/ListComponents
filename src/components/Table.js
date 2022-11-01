@@ -63,6 +63,16 @@ const Styles = styled.div`
       &.isResizing {
         background: red;
       }
+      &::after {
+        content: "";
+        display: block;
+        position: absolute;
+        bottom: 0;
+        left: -2px;
+        height: 1px;
+        width: 4px;
+        background: #ccc;
+      }
     }
 
     .tr {
@@ -71,7 +81,23 @@ const Styles = styled.div`
           /* border-bottom: 0; */
         }
       }
-      span {
+      .td + span {
+        &:nth-of-type(1),
+        &:nth-of-type(2),
+        &:nth-of-type(3),
+        &:nth-of-type(4) {
+          position: relative;
+          &::after {
+            content: "";
+            display: block;
+            position: absolute;
+            bottom: 0;
+            left: -2px;
+            height: 1px;
+            width: 5px;
+            background: #ccc;
+          }
+        }
       }
     }
 

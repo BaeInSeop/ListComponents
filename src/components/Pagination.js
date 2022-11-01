@@ -1,5 +1,21 @@
 import React from "react";
 import styled from "styled-components";
+import leftIcon from "../assets/images/ico_arrow_left.png";
+import rightIcon from "../assets/images/ico_arrow_right.png";
+
+const PrevButtonIcon = styled.div`
+  display: inline-block;
+  width: 11px;
+  height: 19px;
+  background: url(${leftIcon}) no-repeat center;
+`;
+
+const NextButtonIcon = styled.div`
+  display: inline-block;
+  width: 11px;
+  height: 19px;
+  background: url(${rightIcon}) no-repeat center;
+`;
 
 const Pagination = ({ totalCount, limit, page, setPage }) => {
   const numPages = Math.ceil(totalCount / limit);
@@ -8,7 +24,7 @@ const Pagination = ({ totalCount, limit, page, setPage }) => {
     <>
       <Nav>
         <Button onClick={() => setPage(page - 1)} disabled={page === 1}>
-          &lt;
+          <PrevButtonIcon></PrevButtonIcon>
         </Button>
         {Array(numPages)
           .fill()
@@ -22,7 +38,7 @@ const Pagination = ({ totalCount, limit, page, setPage }) => {
             </Button>
           ))}
         <Button onClick={() => setPage(page + 1)} disabled={page === numPages}>
-          &gt;
+          <NextButtonIcon></NextButtonIcon>
         </Button>
       </Nav>
     </>
@@ -35,6 +51,7 @@ const Nav = styled.nav`
   align-items: center;
   gap: 10px;
   margin: 16px;
+  margin-top: 20px;
 `;
 
 const Button = styled.button`
@@ -42,26 +59,26 @@ const Button = styled.button`
   border-radius: 8px;
   padding: 8px;
   margin: 0;
-  /* background: black; */
+  background: none;
   color: black;
   font-size: 1rem;
 
   &:hover {
-    background: gainsboro;
+    /* background: gainsboro; */
     cursor: pointer;
-    transform: translateY(-2px);
+    /* transform: translateY(-2px); */
   }
 
   &[disabled] {
-    background: grey;
+    background: none;
     cursor: revert;
     transform: revert;
-    visibility: hidden;
+    /* visibility: hidden; */
   }
 
   &[aria-current] {
-    background: #4caf50;
-    color: white;
+    background: none;
+    color: #f84450;
     font-weight: bold;
     cursor: revert;
     transform: revert;

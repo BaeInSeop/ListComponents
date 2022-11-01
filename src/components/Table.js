@@ -30,18 +30,29 @@ import RenderIcon from "./RenderIcon";
 import AddUtility from "./AddUtility";
 
 // 스타일 설정
+const StyledTable = styled.div`
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  h1 {
+    margin-top: 62px;
+    margin-bottom: 38px;
+  }
+`;
 const Styles = styled.div`
-  padding: 1rem;
+  margin-top: 35px;
+  /* padding: 1rem; */
   font-family: Open Sans, sans-serif;
   font-size: 13px;
 
   .table {
     border-spacing: 0;
     width: 100%;
+    /* border-bottom: 1px solid #dddfe2; */
 
     .resizer {
       display: inline-block;
-      background: black;
+      /* background: black; */
       width: ${(props) => props.resizeWidth};
       position: relative;
       transform: translateX(50%);
@@ -57,15 +68,63 @@ const Styles = styled.div`
     .tr {
       :last-child {
         .td {
-          border-bottom: 0;
+          /* border-bottom: 0; */
         }
+      }
+      span {
       }
     }
 
     .th {
-      width: 150px;
-      background-color: #ddd;
+      /* width: 150px; */
+      /* &:first-child {
+        width: 9%;
+      } */
+      &:nth-of-type(2) {
+        width: calc(52% - 66px);
+      }
+      &:nth-of-type(4) {
+        text-align: center;
+        width: 12%;
+      }
+      &:nth-of-type(6) {
+        text-align: center;
+        width: 18%;
+      }
+      &:nth-of-type(8) {
+        text-align: center;
+        width: 18%;
+      }
+      /* background-color: #ddd; */
       font-weight: bold;
+    }
+    .td {
+      /* &:first-child {
+        width: 9%;
+      } */
+      &:nth-of-type(2) {
+        width: calc(52% - 66px);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        & > div {
+          max-width: 500px;
+        }
+      }
+      &:nth-of-type(3) {
+        width: 12%;
+
+        & > svg {
+          line-height: 41px;
+          vertical-align: middle;
+        }
+      }
+      &:nth-of-type(4) {
+        width: 18%;
+      }
+      &:nth-of-type(5) {
+        width: 18%;
+      }
     }
 
     .th,
@@ -184,7 +243,7 @@ const Table = ({
       columns,
       // getRowId,
       // initialState: {
-      //   columnOrder: initialColumnOrder,
+      // columnOrder: initialColumnOrder,
       // },
       defaultCanSort: true,
     },
@@ -271,7 +330,7 @@ const Table = ({
 
   // 컨텍스트 메뉴 - 활성화된 컬럼인지 체크
   const isShowingColumn = (column) => {
-    const col = columns.find((item) => item.header === column);
+    const col = columns.find((item) => item.Header === column);
 
     return col.show ? true : false;
   };
@@ -298,162 +357,171 @@ const Table = ({
 
   return (
     <>
-      <DndProvider backend={HTML5Backend}>
-        {/* 찾기 */}
-        {useSearchFilter && <Search onSubmit={setGlobalFilter} />}
+      <StyledTable>
+        <h1>목록</h1>
 
-        {/* 새로 만들기 팝업 */}
-        {useAddPopup && (
-          <AddUtility currentFolder={currentFolder} onAddFolder={onAddFolder} />
-        )}
+        <DndProvider backend={HTML5Backend}>
+          {/* 찾기 */}
+          {useSearchFilter && <Search onSubmit={setGlobalFilter} />}
 
-        {/* 현재 경로 */}
-        {useFolderPath && (
-          <FolderPath
-            currentFolder={currentFolder}
-            setCurrentFolder={setCurrentFolder}
-            checkList={checkList}
-            onMoveItemToFolder={onMoveItemToFolder}
+          {/* 새로 만들기 팝업 */}
+          {useAddPopup && (
+            <AddUtility
+              currentFolder={currentFolder}
+              onAddFolder={onAddFolder}
+            />
+          )}
+
+          {/* 현재 경로 */}
+          {/* {useFolderPath && ( 
+<FolderPath 
+currentFolder={currentFolder} 
+setCurrentFolder={setCurrentFolder} 
+checkList={checkList} 
+onMoveItemToFolder={onMoveItemToFolder} 
+/> 
+)} */}
+          <StyledTable>
+            <Styles resizeWidth={resizeWidth}>
+              <div
+                {...getTableProps()}
+                className="table"
+                style={{
+                  pointerEvents: showContextMenu ? "none" : "initial",
+                  userSelect: "none",
+                  WebkitUserSelect: "none",
+                }}
+              >
+                <ContextMenuTrigger
+                  id="same_unique_identifier"
+                  mouseButton={2}
+                  holdToDisplay={-1}
+                >
+                  <div>
+                    {headerGroups.map((headerGroup) => (
+                      <div
+                        {...headerGroup.getHeaderGroupProps({
+                          style: { display: "flex", width: "100%" },
+                        })}
+                        className="tr"
+                      >
+                        <div
+                          style={{
+                            display: "inline-block",
+                            textAlign: "center",
+                            width: "66px",
+                            boxSizing: "border-box",
+                            lineHeight: "41px",
+                          }}
+                          className="th"
+                        >
+                          <input
+                            style={{ width: "50px", margin: 0 }}
+                            type="checkbox"
+                            id={"checkall"}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                let rowIdList = [];
+                                rows.map((row) => rowIdList.push(row.id));
+
+                                setCheckList(rowIdList);
+                              } else {
+                                setCheckList([]);
+                              }
+                            }}
+                            checked={
+                              checkList.length === rows.length ? true : false
+                            }
+                          />
+                        </div>
+                        {headerGroup.headers.map((column, idx) => (
+                          <Columns
+                            state={state}
+                            moveColumn={moveColumn}
+                            key={column.id}
+                            column={column}
+                            index={idx}
+                          />
+                        ))}
+                      </div>
+                    ))}
+                  </div>
+                </ContextMenuTrigger>
+                <ContextMenu
+                  id="same_unique_identifier"
+                  onShow={() => setShowContextMenu(true)}
+                  onHide={() => setShowContextMenu(false)}
+                >
+                  {columns &&
+                    columns.map((column, idx) => (
+                      <MenuItem
+                        key={idx}
+                        data={{ accessor: column.accessor }}
+                        onClick={onClickContextMenu}
+                      >
+                        {column.Header}
+                        {isShowingColumn(column.Header) && (
+                          <span>
+                            <RenderIcon type="check" size="20px" />
+                          </span>
+                        )}
+                      </MenuItem>
+                    ))}
+                </ContextMenu>
+
+                <FileDrop onDrop={(files, event) => onDropFile(files, event)}>
+                  <div {...getTableBodyProps()}>
+                    {rows.map(
+                      (row, index) =>
+                        prepareRow(row) || (
+                          <Row
+                            rows={rows}
+                            index={index}
+                            row={row}
+                            moveRow={moveRow}
+                            checkList={checkList}
+                            setCheckList={setCheckList}
+                            prepareRow={prepareRow}
+                            setModalData={setModalData}
+                            setData={setData}
+                            setCurrentFolder={setCurrentFolder}
+                            resizeWidth={resizeWidth}
+                            onUpdateItem={onUpdateItem}
+                            onDeleteItem={onDeleteItem}
+                            onClickItem={onClickItem}
+                            {...row.getRowProps()}
+                          />
+                        )
+                    )}
+                  </div>
+                </FileDrop>
+              </div>
+
+              {/* 드래그 시 UI */}
+              <Preview checkList={checkList} />
+            </Styles>
+          </StyledTable>
+        </DndProvider>
+
+        {/* 페이지네이션 */}
+        {usePagination && (
+          <Pagination
+            totalCount={totalRowCount}
+            limit={maximumRow}
+            page={currentPage}
+            setPage={setCurrentPage}
           />
         )}
 
-        <Styles resizeWidth={resizeWidth}>
-          <div
-            {...getTableProps()}
-            className="table"
-            style={{
-              pointerEvents: showContextMenu ? "none" : "initial",
-              userSelect: "none",
-              WebkitUserSelect: "none",
-            }}
-          >
-            <ContextMenuTrigger
-              id="same_unique_identifier"
-              mouseButton={2}
-              holdToDisplay={-1}
-            >
-              <div>
-                {headerGroups.map((headerGroup) => (
-                  <div
-                    {...headerGroup.getHeaderGroupProps({
-                      style: { width: "100%" },
-                    })}
-                    className="tr"
-                  >
-                    <div
-                      style={{
-                        display: "inline-block",
-                        textAlign: "center",
-                        width: "66px",
-                        boxSizing: "border-box",
-                      }}
-                      className="th"
-                    >
-                      <input
-                        style={{ width: "50px", margin: 0 }}
-                        type="checkbox"
-                        id={"checkall"}
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            let rowIdList = [];
-                            rows.map((row) => rowIdList.push(row.id));
-
-                            setCheckList(rowIdList);
-                          } else {
-                            setCheckList([]);
-                          }
-                        }}
-                        checked={
-                          checkList.length === rows.length ? true : false
-                        }
-                      />
-                    </div>
-                    {headerGroup.headers.map((column, idx) => (
-                      <Columns
-                        state={state}
-                        moveColumn={moveColumn}
-                        key={column.id}
-                        column={column}
-                        index={idx}
-                      />
-                    ))}
-                  </div>
-                ))}
-              </div>
-            </ContextMenuTrigger>
-            <ContextMenu
-              id="same_unique_identifier"
-              onShow={() => setShowContextMenu(true)}
-              onHide={() => setShowContextMenu(false)}
-            >
-              {columns &&
-                columns.map((column, idx) => (
-                  <MenuItem
-                    key={idx}
-                    data={{ accessor: column.accessor }}
-                    onClick={onClickContextMenu}
-                  >
-                    {column.header}
-                    {isShowingColumn(column.header) && (
-                      <span>
-                        <RenderIcon type="check" size="20px" />
-                      </span>
-                    )}
-                  </MenuItem>
-                ))}
-            </ContextMenu>
-
-            <FileDrop onDrop={(files, event) => onDropFile(files, event)}>
-              <div {...getTableBodyProps()}>
-                {rows.map(
-                  (row, index) =>
-                    prepareRow(row) || (
-                      <Row
-                        rows={rows}
-                        index={index}
-                        row={row}
-                        moveRow={moveRow}
-                        checkList={checkList}
-                        setCheckList={setCheckList}
-                        prepareRow={prepareRow}
-                        setModalData={setModalData}
-                        setData={setData}
-                        setCurrentFolder={setCurrentFolder}
-                        resizeWidth={resizeWidth}
-                        onUpdateItem={onUpdateItem}
-                        onDeleteItem={onDeleteItem}
-                        onClickItem={onClickItem}
-                        {...row.getRowProps()}
-                      />
-                    )
-                )}
-              </div>
-            </FileDrop>
-          </div>
-
-          {/* 드래그 시 UI */}
-          <Preview checkList={checkList} />
-        </Styles>
-      </DndProvider>
-
-      {/* 페이지네이션 */}
-      {usePagination && (
-        <Pagination
-          totalCount={totalRowCount}
-          limit={maximumRow}
-          page={currentPage}
-          setPage={setCurrentPage}
+        {/* 상세보기 Modal */}
+        <RenderModal
+          isOpen={isOpenDetailModal}
+          setIsOpen={setIsOpenDetailModal}
+          width="400px"
+          height="600px"
+          data={<DetailItem data={modalData} />}
         />
-      )}
-
-      {/* 상세보기 Modal */}
-      <RenderModal
-        isOpen={isOpenDetailModal}
-        setIsOpen={setIsOpenDetailModal}
-        width="400px"
-        height="600px"
-        data={<DetailItem data={modalData} />}
-      />
+      </StyledTable>
     </>
   );
 };

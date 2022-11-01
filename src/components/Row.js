@@ -139,120 +139,143 @@ const Row = ({
   }, [checkList]);
 
   return (
-    <div
-      ref={dropRef}
-      style={{
-        fontWeight: isDragging ? "bold" : "",
-        border: row.original.id === enterFolderIndex ? "1px solid red" : "none",
-        userSelect: "none",
-      }}
-      className="tr"
-    >
+    <div style={{ display: "flex" }}>
       <div
-        ref={dragRef}
-        onMouseDown={(e) =>
-          1 < checkList.length ? null : setCheckList([row.id])
-        }
-        onClick={(e) => setCheckList([row.id])}
+        ref={dropRef}
+        style={{
+          fontWeight: isDragging ? "bold" : "",
+          border:
+            row.original.id === enterFolderIndex ? "1px solid red" : "none",
+          userSelect: "none",
+          display: "flex",
+          width: "100%",
+        }}
+        className="tr"
       >
-        <div style={{ display: "inline-block" }} className="td">
-          <input
-            className="checkbox"
-            style={{ width: "50px" }}
-            type="checkbox"
-            id={row.id}
-            onChange={(e) => {
-              if (e.target.checked) {
-                setCheckList([...checkList, row.id]);
-              } else {
-                setCheckList(checkList.filter((list) => list !== row.id));
-              }
+        <div
+          style={{ display: "flex", width: "100%" }}
+          ref={dragRef}
+          onMouseDown={(e) =>
+            1 < checkList.length ? null : setCheckList([row.id])
+          }
+          onClick={(e) => setCheckList([row.id])}
+        >
+          <div
+            style={{
+              display: "inline-block",
+              lineHeight: "41px",
             }}
-            checked={checkList.includes(row.id) ? true : false}
-          />
-        </div>
-        {row.cells.map((cell) => {
-          prepareRow(row);
-          return (
-            <>
-              <div
-                {...cell.getCellProps()}
-                style={{
-                  ...cell.getCellProps().style,
-                  verticalAlign: "bottom",
-                }}
-                className="td"
-              >
-                {"Extension" === cell.column.header ? (
-                  <RenderIcon type={cell.value} cursor={false} size="20px" />
-                ) : "Name" === cell.column.header ? (
-                  <div
-                    style={{
-                      display: "flex",
-                      gap: "10px",
-                      opacity: 1 !== row.original.status ? 0.5 : 1,
-                    }}
-                    onMouseEnter={() => setIsMouseOverDiv(true)}
-                    onMouseLeave={() => setIsMouseOverDiv(false)}
-                  >
-                    <span
+            className="td"
+          >
+            <input
+              className="checkbox"
+              style={{ width: "50px" }}
+              type="checkbox"
+              id={row.id}
+              onChange={(e) => {
+                if (e.target.checked) {
+                  setCheckList([...checkList, row.id]);
+                } else {
+                  setCheckList(checkList.filter((list) => list !== row.id));
+                }
+              }}
+              checked={checkList.includes(row.id) ? true : false}
+            />
+          </div>
+          {row.cells.map((cell) => {
+            prepareRow(row);
+            return (
+              <>
+                <div
+                  {...cell.getCellProps()}
+                  style={{
+                    // ...cell.getCellProps().style,
+                    display: "inline-block",
+                    boxSizing: "border-box",
+                    verticalAlign: "bottom",
+                    lineHeight: "41px",
+                    fontSize: "18px",
+                    textAlign: "center",
+                  }}
+                  className="td"
+                >
+                  {"Extension" === cell.column.header ? (
+                    <RenderIcon type={cell.value} cursor={false} size="20px" />
+                  ) : "Name" === cell.column.header ? (
+                    <div
                       style={{
-                        fontWeight: isMouseOverSpan ? "bold" : "",
-                        textDecoration: isMouseOverSpan ? "underline" : "none",
+                        display: "flex",
+                        gap: "10px",
+                        opacity: 1 !== row.original.status ? 0.5 : 1,
                       }}
-                      onMouseOver={() => setIsMouseOverSpan(true)}
-                      onMouseLeave={() => setIsMouseOverSpan(false)}
-                      onClick={(e) => clickItem(row)}
+                      onMouseEnter={() => setIsMouseOverDiv(true)}
+                      onMouseLeave={() => setIsMouseOverDiv(false)}
                     >
-                      {cell.render("Cell")}
-                    </span>
+                      <span
+                        style={{
+                          fontWeight: isMouseOverSpan ? "bold" : "",
+                          textDecoration: isMouseOverSpan
+                            ? "underline"
+                            : "none",
+                        }}
+                        onMouseOver={() => setIsMouseOverSpan(true)}
+                        onMouseLeave={() => setIsMouseOverSpan(false)}
+                        onClick={(e) => clickItem(row)}
+                      >
+                        {cell.render("Cell")}
+                      </span>
 
-                    {2 === row.original.status ? (
-                      <span>
-                        <ReactLoading
-                          type="spin"
-                          color={"red"}
-                          width={15}
-                          height={15}
+                      {2 === row.original.status ? (
+                        <span>
+                          <ReactLoading
+                            type="spin"
+                            color={"red"}
+                            width={15}
+                            height={15}
+                          />
+                        </span>
+                      ) : (
+                        <span onClick={() => setModalData(row.original)}>
+                          {isMouseOverDiv && (
+                            <RenderIcon
+                              type={"dot"}
+                              cursor={true}
+                              size="15px"
+                            />
+                          )}
+                        </span>
+                      )}
+                    </div>
+                  ) : "Action" === cell.column.header ? (
+                    <>
+                      <button onClick={(e) => onUpdateClick(row)}>
+                        <RenderIcon type={"update"} size="15px" cursor={true} />
+                      </button>
+                      <button onClick={(e) => onDeleteClick(row)}>
+                        <RenderIcon
+                          type={"delete"}
+                          size="15px"
+                          cursor={true}
+                          onClick={(e) => onDeleteClick(row)}
                         />
-                      </span>
-                    ) : (
-                      <span onClick={() => setModalData(row.original)}>
-                        {isMouseOverDiv && (
-                          <RenderIcon type={"dot"} cursor={true} size="15px" />
-                        )}
-                      </span>
-                    )}
-                  </div>
-                ) : "Action" === cell.column.header ? (
-                  <>
-                    <button onClick={(e) => onUpdateClick(row)}>
-                      <RenderIcon type={"update"} size="15px" cursor={true} />
-                    </button>
-                    <button onClick={(e) => onDeleteClick(row)}>
-                      <RenderIcon
-                        type={"delete"}
-                        size="15px"
-                        cursor={true}
-                        onClick={(e) => onDeleteClick(row)}
-                      />
-                    </button>
-                  </>
-                ) : (
-                  cell.render("Cell")
-                )}
-              </div>
-              <span
-                style={{
-                  display: "inline-block",
-                  width: resizeWidth,
-                  height: "100%",
-                  // padding: "0.5rem",
-                }}
-              />
-            </>
-          );
-        })}
+                      </button>
+                    </>
+                  ) : (
+                    cell.render("Cell")
+                  )}
+                </div>
+                <span
+                  style={{
+                    display: "inline-block",
+                    width: resizeWidth,
+                    height: "100%",
+                    // padding: "0.5rem",
+                  }}
+                />
+              </>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

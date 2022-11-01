@@ -43,6 +43,10 @@ const Columns = ({ state, column, index, moveColumn }) => {
         ref={ref}
         {...column.getHeaderProps(column.getSortByToggleProps())}
         className="th"
+        style={{
+          lineHeight: "41px",
+          boxSizing: "border-box",
+        }}
       >
         {memoizedColumn}
         <span>

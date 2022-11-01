@@ -1,6 +1,6 @@
 {
   "name": "@bis0212/listcomponents",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "private": false,
   "module": "dist/index.js",
   "main": "dist/index.js",

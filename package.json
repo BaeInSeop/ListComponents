@@ -1,6 +1,6 @@
 {
-  "name": "@bis0212/listcomponents",
-  "version": "0.1.13",
+  "name": "@baronote/listcomponents",
+  "version": "0.1.2",
   "private": false,
   "module": "dist/index.js",
   "main": "dist/index.js",

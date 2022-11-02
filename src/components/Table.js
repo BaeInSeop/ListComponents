@@ -113,6 +113,7 @@ const Table = ({
   useSearchFilter,
   useFolderPath,
   usePagination,
+  useColumn,
   onChangeColumnWidth,
   onChangeColumnOrder,
   onAddFolder,
@@ -327,81 +328,85 @@ const Table = ({
               WebkitUserSelect: "none",
             }}
           >
-            <ContextMenuTrigger
-              id="same_unique_identifier"
-              mouseButton={2}
-              holdToDisplay={-1}
-            >
-              <div>
-                {headerGroups.map((headerGroup) => (
-                  <div
-                    {...headerGroup.getHeaderGroupProps({
-                      style: { width: "100%" },
-                    })}
-                    className="tr"
-                  >
-                    <div
-                      style={{
-                        display: "inline-block",
-                        textAlign: "center",
-                        width: "66px",
-                        boxSizing: "border-box",
-                      }}
-                      className="th"
-                    >
-                      <input
-                        style={{ width: "50px", margin: 0 }}
-                        type="checkbox"
-                        id={"checkall"}
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            let rowIdList = [];
-                            rows.map((row) => rowIdList.push(row.id));
+            {useColumn && (
+              <>
+                <ContextMenuTrigger
+                  id="same_unique_identifier"
+                  mouseButton={2}
+                  holdToDisplay={-1}
+                >
+                  <div>
+                    {headerGroups.map((headerGroup) => (
+                      <div
+                        {...headerGroup.getHeaderGroupProps({
+                          style: { width: "100%" },
+                        })}
+                        className="tr"
+                      >
+                        <div
+                          style={{
+                            display: "inline-block",
+                            textAlign: "center",
+                            width: "66px",
+                            boxSizing: "border-box",
+                          }}
+                          className="th"
+                        >
+                          <input
+                            style={{ width: "50px", margin: 0 }}
+                            type="checkbox"
+                            id={"checkall"}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                let rowIdList = [];
+                                rows.map((row) => rowIdList.push(row.id));
 
-                            setCheckList(rowIdList);
-                          } else {
-                            setCheckList([]);
-                          }
-                        }}
-                        checked={
-                          checkList.length === rows.length ? true : false
-                        }
-                      />
-                    </div>
-                    {headerGroup.headers.map((column, idx) => (
-                      <Columns
-                        state={state}
-                        moveColumn={moveColumn}
-                        key={column.id}
-                        column={column}
-                        index={idx}
-                      />
+                                setCheckList(rowIdList);
+                              } else {
+                                setCheckList([]);
+                              }
+                            }}
+                            checked={
+                              checkList.length === rows.length ? true : false
+                            }
+                          />
+                        </div>
+                        {headerGroup.headers.map((column, idx) => (
+                          <Columns
+                            state={state}
+                            moveColumn={moveColumn}
+                            key={column.id}
+                            column={column}
+                            index={idx}
+                          />
+                        ))}
+                      </div>
                     ))}
                   </div>
-                ))}
-              </div>
-            </ContextMenuTrigger>
-            <ContextMenu
-              id="same_unique_identifier"
-              onShow={() => setShowContextMenu(true)}
-              onHide={() => setShowContextMenu(false)}
-            >
-              {columns &&
-                columns.map((column, idx) => (
-                  <MenuItem
-                    key={idx}
-                    data={{ accessor: column.accessor }}
-                    onClick={onClickContextMenu}
-                  >
-                    {column.header}
-                    {isShowingColumn(column.header) && (
-                      <span>
-                        <RenderIcon type="check" size="20px" />
-                      </span>
-                    )}
-                  </MenuItem>
-                ))}
-            </ContextMenu>
+                </ContextMenuTrigger>
+                <ContextMenu
+                  id="same_unique_identifier"
+                  onShow={() => setShowContextMenu(true)}
+                  onHide={() => setShowContextMenu(false)}
+                >
+                  {columns &&
+                    columns.map((column, idx) => (
+                      <MenuItem
+                        key={idx}
+                        data={{ accessor: column.accessor }}
+                        onClick={onClickContextMenu}
+                      >
+                        {column.header}
+                        {isShowingColumn(column.header) && (
+                          <span>
+                            <RenderIcon type="check" size="20px" />
+                          </span>
+                        )}
+                      </MenuItem>
+                    ))}
+                </ContextMenu>
+              </>
+            )}
 
             <FileDrop onDrop={(files, event) => onDropFile(files, event)}>
               <div {...getTableBodyProps()}>

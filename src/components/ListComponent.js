@@ -5,24 +5,9 @@ import dummyData from "./data/data.json";
 function ListComponent({
   header,
   items,
-  resizeWidth,
-  maximumRowCount,
-  totalCount,
-  useSearchFilter,
-  useAddPopup,
-  useFolderPath,
-  usePagination,
-  onChangeColumnWidth,
-  onChangeColumnOrder,
-  onAddFolder,
   onMoveRow,
-  onMoveItemToFolder,
-  onChangeHiddenColumn,
-  onChangeCurrentPage,
-  onChangePath,
-  onUpdateItem,
-  onDeleteItem,
   onClickItem,
+  onChangeCheckList,
 }) {
   const [columns, setColumns] = useState(
     header
@@ -107,10 +92,7 @@ function ListComponent({
         resizeWidth={resizeWidth ? resizeWidth : "3px"}
         maximumRowCount={maximumRowCount ? maximumRowCount : 10}
         totalCount={totalCount ? totalCount : 30}
-        useAddPopup={useAddPopup ? useAddPopup : true}
-        useSearchFilter={useSearchFilter ? useSearchFilter : true}
-        useFolderPath={useFolderPath ? useFolderPath : true}
-        usePagination={usePagination ? usePagination : true}
+        useColumn={undefined !== useColumn ? useColumn : true}
         onChangeColumnWidth={
           onChangeColumnWidth
             ? onChangeColumnWidth

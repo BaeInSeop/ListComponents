@@ -1,49 +1,27 @@
-import React from "react";
-import { FcAudioFile, FcFolder, FcImageFile, FcFile } from "react-icons/fc";
-import { BsCheck } from "react-icons/bs";
-import { BiDotsVerticalRounded } from "react-icons/bi";
-import { GrDocumentPdf, GrNotes, GrUpdate } from "react-icons/gr";
-import { MdDeleteOutline } from "react-icons/md";
+import React, { useRef } from "react";
+const RenderIcon = ({ type, cursor, size, iconProps }) => {
+  const ref = useRef();
 
-const RenderIcon = ({ type, cursor, size }) => {
   const style = {
     cursor: cursor ? "pointer" : "default",
     width: size ? size : "20px",
     height: size ? size : "20px",
   };
-  switch (type) {
-    case "audio":
-      return <FcAudioFile style={style} />;
 
-    case "file":
-      return <FcFile style={style} />;
+  const isReactComponent = (component) => {
+    return React.isValidElement(component);
+  };
 
-    case "folder":
-      return <FcFolder style={style} />;
-
-    case "note":
-      return <GrNotes style={style} />;
-
-    case "pdf":
-      return <GrDocumentPdf style={style} />;
-
-    case "dot":
-      return <BiDotsVerticalRounded style={style} />;
-
-    case "check":
-      return <BsCheck style={style} />;
-
-    case "image":
-      return <FcImageFile style={style} />;
-
-    case "update":
-      return <GrUpdate style={style} />;
-
-    case "delete":
-      return <MdDeleteOutline style={style} />;
-
-    default:
-      return type;
+  if (isReactComponent(iconProps.icons[type])) {
+    return iconProps.icons[type];
+  } else {
+    return (
+      <img
+        src={iconProps.icons[type]}
+        width={`${iconProps.size}px`}
+        height={`${iconProps.size}px`}
+      />
+    );
   }
 };
 

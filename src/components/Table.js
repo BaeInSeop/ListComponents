@@ -11,7 +11,9 @@ import {
 import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 import moment from "moment";
 
+import AutoSizer from "react-virtualized-auto-sizer";
 import { FileDrop } from "react-file-drop";
+import { FixedSizeList } from "react-window";
 
 import styled from "styled-components";
 import { DndProvider } from "react-dnd";
@@ -63,7 +65,7 @@ const Styles = styled.div`
     }
 
     .th {
-      width: 150px;
+      width: 50px;
       background-color: #ddd;
       font-weight: bold;
     }
@@ -103,50 +105,39 @@ const Styles = styled.div`
 
 const Table = ({
   columns,
-  setColumns,
+  // setColumns,
   data,
-  setData,
-  resizeWidth,
-  maximumRowCount,
-  totalCount,
-  useAddPopup,
-  useSearchFilter,
-  useFolderPath,
-  usePagination,
-  useColumn,
-  onChangeColumnWidth,
-  onChangeColumnOrder,
-  onAddFolder,
+  // setData,
+  linkProps,
+  avatarProps,
+  iconProps,
+  timeFormat,
   onMoveRow,
-  onMoveItemToFolder,
-  onChangeHiddenColumn,
-  onChangeCurrentPage,
-  onChangePath,
-  onUpdateItem,
-  onDeleteItem,
   onClickItem,
+  onFileDrop,
+  onSelectedRows,
+  onContextMenu,
 }) => {
-  const [currentFolder, setCurrentFolder] = useState("home"); //현재 폴더
+  // const [currentFolder, setCurrentFolder] = useState("home"); //현재 폴더
 
-  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
-  const [maximumRow, setMaximumRow] = useState(maximumRowCount); // 아이템 최대 갯수
-  const [totalRowCount, setTotalRowCount] = useState(totalCount); // 불러온 아이템 최대 개수
+  // const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
+  // const [maximumRow, setMaximumRow] = useState(maximumRowCount); // 아이템 최대 갯수
+  // const [totalRowCount, setTotalRowCount] = useState(totalCount); // 불러온 아이템 최대 개수
   const [checkList, setCheckList] = useState([]); // 체크된 아이템
-
   const [isOpenDetailModal, setIsOpenDetailModal] = useState(false); // 상세보기 Open State
   const [modalData, setModalData] = useState(); // 상세보기 데이터 State
-  const [showContextMenu, setShowContextMenu] = useState(false); // 컨텍스트 메뉴 Open Sate
+  // const [showContextMenu, setShowContextMenu] = useState(false); // 컨텍스트 메뉴 Open Sate
 
   // 현재 경로가 변경될 시 목록 최신화
-  useEffect(() => {
-    onChangePath(currentFolder);
-  }, [currentFolder]);
+  // useEffect(() => {
+  //   onChangePath(currentFolder);
+  // }, [currentFolder]);
 
   // Column - Show 항목이 false 인 경우 보여주지 않는 컬럼 설정
-  useEffect(() => {
-    const noShowingColumns = columns.filter((e) => !e.show);
-    setHiddenColumns(noShowingColumns.map((column) => column.accessor));
-  }, [columns]);
+  // useEffect(() => {
+  //   const noShowingColumns = columns.filter((e) => !e.show);
+  //   setHiddenColumns(noShowingColumns.map((column) => column.accessor));
+  // }, [columns]);
 
   // Column 기본 사이즈 설정 (사용 안함)
   const defaultSize = useMemo(() => ({
@@ -168,6 +159,10 @@ const Table = ({
     }
   }, [modalData]);
 
+  useEffect(() => {
+    onSelectedRows(checkList);
+  }, [checkList]);
+
   const {
     getTableProps,
     getTableBodyProps,
@@ -187,6 +182,9 @@ const Table = ({
       // initialState: {
       //   columnOrder: initialColumnOrder,
       // },
+      defaultSize: {
+        maxHeight: 100,
+      },
       defaultCanSort: true,
     },
     useColumnOrder,
@@ -197,78 +195,63 @@ const Table = ({
   );
 
   // Column - 사이즈 변경 시 DB 업데이트
-  useEffect(() => {
-    if (0 < Object.keys(state.columnResizing.columnWidths).length) {
-      onChangeColumnWidth(state.columnResizing.columnWidths);
-    }
-  }, [state.columnResizing.columnWidths]);
+  // useEffect(() => {
+  //   if (0 < Object.keys(state.columnResizing.columnWidths).length) {
+  //     onChangeColumnWidth(state.columnResizing.columnWidths);
+  //   }
+  // }, [state.columnResizing.columnWidths]);
 
   // Column - 순서 변경 시 DB 업데이트
-  useEffect(() => {
-    onChangeColumnOrder(state.columnOrder);
-  }, [state.columnOrder]);
+  // useEffect(() => {
+  //   onChangeColumnOrder(state.columnOrder);
+  // }, [state.columnOrder]);
 
   // Column - 숨김 처리 변경 시 DB 업데이트
-  useEffect(() => {
-    if (0 < state.hiddenColumns.length) {
-      onChangeHiddenColumn(state.hiddenColumns);
-    }
-  }, [state.hiddenColumns]);
+  // useEffect(() => {
+  //   if (0 < state.hiddenColumns.length) {
+  //     onChangeHiddenColumn(state.hiddenColumns);
+  //   }
+  // }, [state.hiddenColumns]);
 
-  // 페이지 변경 시 목록 갱신
-  useEffect(() => {
-    onChangeCurrentPage(currentPage, totalRowCount);
-  }, [currentPage]);
+  // // 페이지 변경 시 목록 갱신
+  // useEffect(() => {
+  //   onChangeCurrentPage(currentPage, totalRowCount);
+  // }, [currentPage]);
 
   // Column 순서 변경
-  const moveColumn = useCallback(
-    (item, newIndex) => {
-      const newOrder = headerGroups[0].headers.map((header) => header.id);
-      const { index: currentIndex } = item;
+  // const moveColumn = useCallback(
+  //   (item, newIndex) => {
+  //     const newOrder = headerGroups[0].headers.map((header) => header.id);
+  //     const { index: currentIndex } = item;
 
-      const [removedColumn] = newOrder.splice(currentIndex, 1);
+  //     const [removedColumn] = newOrder.splice(currentIndex, 1);
 
-      newOrder.splice(newIndex, 0, removedColumn);
+  //     newOrder.splice(newIndex, 0, removedColumn);
 
-      setColumnOrder(newOrder);
-    },
-    [state, setColumnOrder]
-  );
+  //     setColumnOrder(newOrder);
+  //   },
+  //   [state, setColumnOrder]
+  // );
 
   // 아이템 - 순서 변경
-  const moveRow = (dragIndex, hoverIndex, item, row) => {
+  const moveRow = (dragIndex, hoverIndex, movedItem, droppedRow) => {
     if (dragIndex === hoverIndex) {
       return;
-    }
-    if ("folder" === row.original.extension) {
-      onMoveItemToFolder(checkList, row);
-      return;
     } else {
-      onMoveRow(item, row);
-      return;
+      onMoveRow(dragIndex, hoverIndex, movedItem, droppedRow);
     }
-
-    // const dragRecord = data[dragIndex];
-    // const tempRecords = [...data];
-
-    // tempRecords.splice(dragIndex, 1);
-    // tempRecords.splice(hoverIndex, 0, dragRecord);
-
-    // console.log("tempRecords : ", tempRecords);
-
-    // setData(tempRecords);
   };
 
   // 컨텍스트 메뉴 클릭
-  const onClickContextMenu = (e, data) => {
-    const col = columns.find((column) => column.accessor === data.accessor);
+  // const onClickContextMenu = (e, data) => {
+  //   const col = columns.find((column) => column.accessor === data.accessor);
 
-    setColumns((prev) =>
-      prev.map((item) =>
-        item === col ? { ...col, show: !item.show } : { ...item }
-      )
-    );
-  };
+  //   setColumns((prev) =>
+  //     prev.map((item) =>
+  //       item === col ? { ...col, show: !item.show } : { ...item }
+  //     )
+  //   );
+  // };
 
   // 컨텍스트 메뉴 - 활성화된 컬럼인지 체크
   const isShowingColumn = (column) => {
@@ -279,56 +262,45 @@ const Table = ({
 
   // 로컬 파일 드롭
   const onDropFile = (files, event) => {
-    console.log("files : ", files);
-    let rowIndex = rows.length;
-    let fileList = [];
-
-    for (let i = 0; i < files.length; i++) {
-      fileList.push({
-        id: rowIndex,
-        title: files[i].name,
-        type: "file",
-        modified: moment(files[i].lastModified).format("YYYY-MM-DD"),
-        status: 0,
-      });
-      rowIndex++;
-    }
-
-    setData((prev) => prev.concat(fileList));
+    onFileDrop(files);
   };
+
+  useEffect(() => {
+    console.log("rows : ", rows);
+  }, [rows]);
 
   return (
     <>
       <DndProvider backend={HTML5Backend}>
         {/* 찾기 */}
-        {useSearchFilter && <Search onSubmit={setGlobalFilter} />}
+        {/* {useSearchFilter && <Search onSubmit={setGlobalFilter} />} */}
 
         {/* 새로 만들기 팝업 */}
-        {useAddPopup && (
+        {/* {useAddPopup && (
           <AddUtility currentFolder={currentFolder} onAddFolder={onAddFolder} />
-        )}
+        )} */}
 
         {/* 현재 경로 */}
-        {useFolderPath && (
+        {/* {useFolderPath && (
           <FolderPath
             currentFolder={currentFolder}
             setCurrentFolder={setCurrentFolder}
             checkList={checkList}
             onMoveItemToFolder={onMoveItemToFolder}
           />
-        )}
+        )} */}
 
-        <Styles resizeWidth={resizeWidth}>
+        <Styles>
           <div
             {...getTableProps()}
             className="table"
             style={{
-              pointerEvents: showContextMenu ? "none" : "initial",
+              // pointerEvents: showContextMenu ? "none" : "initial",
               userSelect: "none",
               WebkitUserSelect: "none",
             }}
           >
-            {useColumn && (
+            {/* {useColumn && (
               <>
                 <ContextMenuTrigger
                   id="same_unique_identifier"
@@ -406,7 +378,7 @@ const Table = ({
                     ))}
                 </ContextMenu>
               </>
-            )}
+            )} */}
 
             <FileDrop onDrop={(files, event) => onDropFile(files, event)}>
               <div {...getTableBodyProps()}>
@@ -422,12 +394,17 @@ const Table = ({
                         setCheckList={setCheckList}
                         prepareRow={prepareRow}
                         setModalData={setModalData}
-                        setData={setData}
-                        setCurrentFolder={setCurrentFolder}
-                        resizeWidth={resizeWidth}
-                        onUpdateItem={onUpdateItem}
-                        onDeleteItem={onDeleteItem}
+                        // setData={setData}
+                        linkProps={linkProps}
+                        avatarProps={avatarProps}
+                        iconProps={iconProps}
+                        timeFormat={timeFormat}
+                        // setCurrentFolder={setCurrentFolder}
+                        // resizeWidth={resizeWidth}
+                        // onUpdateItem={onUpdateItem}
+                        // onDeleteItem={onDeleteItem}
                         onClickItem={onClickItem}
+                        onContextMenu={onContextMenu}
                         {...row.getRowProps()}
                       />
                     )
@@ -442,14 +419,14 @@ const Table = ({
       </DndProvider>
 
       {/* 페이지네이션 */}
-      {usePagination && (
+      {/* {usePagination && (
         <Pagination
           totalCount={totalRowCount}
           limit={maximumRow}
           page={currentPage}
           setPage={setCurrentPage}
         />
-      )}
+      )} */}
 
       {/* 상세보기 Modal */}
       <RenderModal

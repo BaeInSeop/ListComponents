@@ -16,6 +16,7 @@
     "path": "^0.12.7",
     "path-browserify": "^1.0.1",
     "react": "^18.2.0",
+    "react-avatar": "^5.0.3",
     "react-contextmenu": "^2.14.0",
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
@@ -26,6 +27,8 @@
     "react-modal": "^3.16.1",
     "react-scripts": "4.0.3",
     "react-table": "^7.8.0",
+    "react-virtualized-auto-sizer": "^1.0.7",
+    "react-window": "^1.8.8",
     "reactjs-popup": "^2.0.5",
     "styled-components": "^5.3.6",
     "web-vitals": "^2.1.0"

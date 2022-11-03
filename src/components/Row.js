@@ -1,7 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
+import moment from "moment";
 import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { getEmptyImage } from "react-dnd-html5-backend";
 import axios from "axios";
+import Avatar from "react-avatar";
 
 import RenderIcon from "./RenderIcon";
 import ReactLoading from "react-loading";
@@ -15,11 +17,16 @@ const Row = ({
   checkList,
   setCheckList,
   setModalData,
-  setCurrentFolder,
-  resizeWidth,
-  onUpdateItem,
-  onDeleteItem,
+  // setCurrentFolder,
+  // resizeWidth,
+  // onUpdateItem,
+  // onDeleteItem,
   onClickItem,
+  onContextMenu,
+  linkProps,
+  avatarProps,
+  iconProps,
+  timeFormat,
 }) => {
   const dropRef = useRef(null);
   const dragRef = useRef(null);
@@ -100,22 +107,15 @@ const Row = ({
 
   const clickItem = (row) => {
     onClickItem(row);
-    if (1 === row.original.status) {
-      if ("folder" === row.original.extension) {
-        setCurrentFolder(`${row.original.path}/${row.original.name}`);
-      } else {
-        setCheckList([row.id]);
-      }
-    }
   };
 
-  const onUpdateClick = (row) => {
-    onUpdateItem(row);
-  };
+  // const onUpdateClick = (row) => {
+  //   onUpdateItem(row);
+  // };
 
-  const onDeleteClick = (row) => {
-    onDeleteItem(row);
-  };
+  // const onDeleteClick = (row) => {
+  //   onDeleteItem(row);
+  // };
 
   const opacity = isDragging ? 0 : 1;
 
@@ -127,16 +127,114 @@ const Row = ({
   }, [preview]);
 
   useEffect(() => {
-    console.log("enterFolderIndex : ", enterFolderIndex);
-  }, [enterFolderIndex]);
-
-  useEffect(() => {
     var checkBox = document.getElementById(row.id);
 
-    checkBox.addEventListener("mousedown", (e) => {
-      e.stopImmediatePropagation();
-    });
+    if (checkBox) {
+      checkBox.addEventListener("mousedown", (e) => {
+        e.stopImmediatePropagation();
+      });
+    }
   }, [checkList]);
+
+  const convertValueToType = (cell) => {
+    switch (cell.column.type) {
+      case "text":
+        return cell.render("Cell");
+
+      case "time":
+        return convertTimeFormat(cell.value);
+
+      case "icon":
+        return (
+          <RenderIcon type={cell.value} cursor={false} iconProps={iconProps} />
+        );
+
+      case "avatar":
+        return (
+          <Avatar
+            name={cell.value}
+            size={avatarProps.size ? avatarProps.size : "25"}
+            round={avatarProps.round ? avatarProps.round : "50%"}
+          />
+        );
+
+      case "link":
+        return (
+          <a href={cell.value} target="_blank">
+            <span
+              style={{
+                display: "inline-block",
+                width: "100%",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {"" !== linkProps.text ? linkProps.text : cell.value}
+            </span>
+          </a>
+        );
+
+      case "checkbox":
+        if (!cell.value) {
+          return;
+        }
+        return drawCheckBox();
+
+      case "image":
+        if (!cell.value) {
+          return;
+        }
+        return (
+          <a href={cell.value} target="_blank">
+            <img src={cell.value} width="30px" height="30px" />{" "}
+          </a>
+        );
+
+      default:
+        return cell.render("Cell");
+    }
+  };
+
+  const convertTimeFormat = (date) => {
+    var returnDate = "";
+
+    if (!date) {
+      return returnDate;
+    }
+    if ("undefined" === date || "null" === date) {
+      return returnDate;
+    }
+
+    if (moment(date).isValid === false) {
+      return returnDate;
+    }
+
+    returnDate = moment(date).format(timeFormat);
+
+    return returnDate;
+  };
+
+  const drawCheckBox = () => {
+    return (
+      <div style={{ display: "inline-block" }}>
+        <input
+          className="checkbox"
+          style={{ width: "50px" }}
+          type="checkbox"
+          id={row.id}
+          onChange={(e) => {
+            if (e.target.checked) {
+              setCheckList([...checkList, row.id]);
+            } else {
+              setCheckList(checkList.filter((list) => list !== row.id));
+            }
+          }}
+          checked={checkList.includes(row.id) ? true : false}
+        />
+      </div>
+    );
+  };
 
   return (
     <div
@@ -150,28 +248,49 @@ const Row = ({
     >
       <div
         ref={dragRef}
+        style={{
+          fontWeight: isMouseOverDiv ? "bold" : "",
+          background: isMouseOverDiv ? "#EFF1F7" : "none",
+          cursor: isMouseOverDiv ? "pointer" : "default",
+        }}
+        onMouseEnter={() => setIsMouseOverDiv(true)}
+        onMouseLeave={() => setIsMouseOverDiv(false)}
         onMouseDown={(e) =>
-          1 < checkList.length ? null : setCheckList([row.id])
+          1 < checkList.length
+            ? null
+            : row.original.checkbox
+            ? setCheckList([row.id])
+            : null
         }
-        onClick={(e) => setCheckList([row.id])}
+        onClick={(e) => {
+          onClickItem(row);
+
+          if (row.original.checkBox) {
+            setCheckList([row.id]);
+          }
+        }}
+        onContextMenu={(event) => onContextMenu(row, event)}
       >
-        <div style={{ display: "inline-block" }} className="td">
-          <input
-            className="checkbox"
-            style={{ width: "50px" }}
-            type="checkbox"
-            id={row.id}
-            onChange={(e) => {
-              if (e.target.checked) {
-                setCheckList([...checkList, row.id]);
-              } else {
-                setCheckList(checkList.filter((list) => list !== row.id));
-              }
-            }}
-            checked={checkList.includes(row.id) ? true : false}
-          />
-        </div>
         {row.cells.map((cell) => {
+          prepareRow(row);
+
+          return (
+            <>
+              <div
+                {...cell.getCellProps()}
+                style={{
+                  ...cell.getCellProps().style,
+                  verticalAlign: "bottom",
+                }}
+                className="td"
+              >
+                {convertValueToType(cell)}
+              </div>
+            </>
+          );
+        })}
+
+        {/* {row.cells.map((cell) => {
           prepareRow(row);
           return (
             <>
@@ -247,12 +366,12 @@ const Row = ({
                   display: "inline-block",
                   width: resizeWidth,
                   height: "100%",
-                  // padding: "0.5rem",
+                  padding: "0.5rem",
                 }}
               />
             </>
           );
-        })}
+        })} */}
       </div>
     </div>
   );

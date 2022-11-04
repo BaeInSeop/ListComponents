@@ -156,3 +156,70 @@ const records = React.useMemo(
 ```
 
 ![Sample Image](https://i.ibb.co/nnGrZX5/sample.jpg)
+
+## User Custom
+
+### you want to custom Icons ?
+
+```js
+<ListComponent
+  columns={columns}
+  records={records}
+  iconProps={{
+    size: 25,
+    icons: {
+      folder:
+        "https://cdn3.iconfinder.com/data/icons/feather-5/24/folder-512.png",
+      file: <FaRegFile width={30} height={30} />,
+    },
+  }}
+/>
+```
+
+※ You can use react-icons and image url
+And also can add icon key
+
+### you want to custom Avatar size or round ?
+
+```js
+<ListComponent
+  columns={columns}
+  records={records}
+  avatarProps={{
+    size: 25,
+    round: "20%",
+  }}
+/>
+```
+
+### you want to custom Link property ?
+
+```js
+<ListComponent
+  columns={columns}
+  records={records}
+  linkProps={{
+    target: "_self",
+    text: "Go to Link",
+  }}
+/>
+```
+
+### you want to custom Thumbnail size ?
+
+```js
+<ListComponent
+  columns={columns}
+  records={records}
+  imageProps={{
+    target: "_self",
+    size: 40,
+  }}
+/>
+```
+
+### you want to custom Timeformat ?
+
+```js
+<ListComponent columns={columns} records={records} timeFormat={"YY/MM/DD"} />
+```

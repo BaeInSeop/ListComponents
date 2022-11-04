@@ -23,6 +23,7 @@ function ListComponent({
   onSelectedRows,
   onFileDrop,
   onContextMenu,
+  onBackward,
 }) {
   const columns = React.useMemo(
     () => [
@@ -207,6 +208,13 @@ function ListComponent({
             ? onSelectedRows
             : (rows) => {
                 console.log("Selected Rows : ", rows);
+              }
+        }
+        onBackward={
+          onBackward
+            ? onBackward
+            : () => {
+                console.log("Clicked Backward");
               }
         }
       />

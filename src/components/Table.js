@@ -117,6 +117,7 @@ const Table = ({
   onFileDrop,
   onSelectedRows,
   onContextMenu,
+  onBackward,
 }) => {
   // const [currentFolder, setCurrentFolder] = useState("home"); //현재 폴더
 
@@ -265,9 +266,13 @@ const Table = ({
     onFileDrop(files);
   };
 
-  useEffect(() => {
-    console.log("rows : ", rows);
-  }, [rows]);
+  const calcColumnsWidth = () => {
+    let width = 0;
+
+    columns.map((col) => (col.width ? (width += col.width) : (width += 150)));
+
+    return width + 2;
+  };
 
   return (
     <>
@@ -380,8 +385,14 @@ const Table = ({
               </>
             )} */}
 
-            <FileDrop onDrop={(files, event) => onDropFile(files, event)}>
-              <div {...getTableBodyProps()}>
+            <FileDrop
+              onDrop={(files, event) => onDropFile(files, event)}
+              style={{ overflowX: "auto" }}
+            >
+              <div
+                {...getTableBodyProps()}
+                style={{ overflowX: "auto", width: calcColumnsWidth() }}
+              >
                 {rows.map(
                   (row, index) =>
                     prepareRow(row) || (
@@ -405,6 +416,7 @@ const Table = ({
                         // onDeleteItem={onDeleteItem}
                         onClickItem={onClickItem}
                         onContextMenu={onContextMenu}
+                        onBackward={onBackward}
                         {...row.getRowProps()}
                       />
                     )

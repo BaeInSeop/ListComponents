@@ -27,6 +27,7 @@ const Row = ({
   avatarProps,
   iconProps,
   timeFormat,
+  onBackward,
 }) => {
   const dropRef = useRef(null);
   const dragRef = useRef(null);
@@ -34,6 +35,7 @@ const Row = ({
 
   const [isMouseOverDiv, setIsMouseOverDiv] = useState(false);
   const [isMouseOverSpan, setIsMouseOverSpan] = useState(false);
+  const [isMouseOverBackward, setIsMouseOverBackward] = useState(false);
 
   const [enterFolderIndex, setEnterFolderIndex] = useState(null);
 
@@ -237,60 +239,78 @@ const Row = ({
   };
 
   return (
-    <div
-      ref={dropRef}
-      style={{
-        fontWeight: isDragging ? "bold" : "",
-        border: row.original.id === enterFolderIndex ? "1px solid red" : "none",
-        userSelect: "none",
-      }}
-      className="tr"
-    >
+    <>
+      {false && 0 === index && (
+        <div
+          className="td"
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            cursor: "pointer",
+            background: isMouseOverBackward ? "#EFF1F7" : "none",
+          }}
+          onClick={() => onBackward()}
+          onMouseEnter={() => setIsMouseOverBackward(true)}
+          onMouseLeave={() => setIsMouseOverBackward(false)}
+        >
+          Move to parent folder
+        </div>
+      )}
       <div
-        ref={dragRef}
+        ref={dropRef}
         style={{
-          fontWeight: isMouseOverDiv ? "bold" : "",
-          background: isMouseOverDiv ? "#EFF1F7" : "none",
-          cursor: isMouseOverDiv ? "pointer" : "default",
+          fontWeight: isDragging ? "bold" : "",
+          border:
+            row.original.id === enterFolderIndex ? "1px solid red" : "none",
+          userSelect: "none",
         }}
-        onMouseEnter={() => setIsMouseOverDiv(true)}
-        onMouseLeave={() => setIsMouseOverDiv(false)}
-        onMouseDown={(e) =>
-          1 < checkList.length
-            ? null
-            : row.original.checkbox
-            ? setCheckList([row.id])
-            : null
-        }
-        onClick={(e) => {
-          onClickItem(row);
-
-          if (row.original.checkBox) {
-            setCheckList([row.id]);
-          }
-        }}
-        onContextMenu={(event) => onContextMenu(row, event)}
+        className="tr"
       >
-        {row.cells.map((cell) => {
-          prepareRow(row);
+        <div
+          ref={dragRef}
+          style={{
+            fontWeight: isMouseOverDiv ? "bold" : "",
+            background: isMouseOverDiv ? "#EFF1F7" : "none",
+            cursor: isMouseOverDiv ? "pointer" : "default",
+          }}
+          onMouseEnter={() => setIsMouseOverDiv(true)}
+          onMouseLeave={() => setIsMouseOverDiv(false)}
+          onMouseDown={(e) =>
+            1 < checkList.length
+              ? null
+              : row.original.checkbox
+              ? setCheckList([row.id])
+              : null
+          }
+          onClick={(e) => {
+            onClickItem(row);
 
-          return (
-            <>
-              <div
-                {...cell.getCellProps()}
-                style={{
-                  ...cell.getCellProps().style,
-                  verticalAlign: "bottom",
-                }}
-                className="td"
-              >
-                {convertValueToType(cell)}
-              </div>
-            </>
-          );
-        })}
+            if (row.original.checkBox) {
+              setCheckList([row.id]);
+            }
+          }}
+          onContextMenu={(event) => onContextMenu(row, event)}
+        >
+          {row.cells.map((cell) => {
+            prepareRow(row);
 
-        {/* {row.cells.map((cell) => {
+            return (
+              <>
+                <div
+                  {...cell.getCellProps()}
+                  style={{
+                    ...cell.getCellProps().style,
+                    verticalAlign: "bottom",
+                  }}
+                  className="td"
+                >
+                  {convertValueToType(cell)}
+                </div>
+              </>
+            );
+          })}
+
+          {/* {row.cells.map((cell) => {
           prepareRow(row);
           return (
             <>
@@ -372,8 +392,9 @@ const Row = ({
             </>
           );
         })} */}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -8,11 +8,14 @@ import Avatar from "react-avatar";
 import RenderIcon from "./RenderIcon";
 import ReactLoading from "react-loading";
 
+import { FixedSizeList } from "react-window";
+
 const Row = ({
   rows,
   row,
   index,
   moveRow,
+  rowHeight,
   prepareRow,
   checkList,
   setCheckList,
@@ -28,6 +31,7 @@ const Row = ({
   iconProps,
   timeFormat,
   onBackward,
+  calcColumnsWidth,
 }) => {
   const dropRef = useRef(null);
   const dragRef = useRef(null);
@@ -162,19 +166,21 @@ const Row = ({
 
       case "link":
         return (
-          <a href={cell.value} target="_blank">
-            <span
-              style={{
-                display: "inline-block",
-                width: "100%",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-              }}
-            >
+          <div
+            style={{
+              display: "inline-block",
+              width: "100%",
+              height: "100%",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+              boxSizing: "border-box",
+            }}
+          >
+            <a href={cell.value} target="_blank">
               {"" !== linkProps.text ? linkProps.text : cell.value}
-            </span>
-          </a>
+            </a>
+          </div>
         );
 
       case "checkbox":
@@ -256,6 +262,65 @@ const Row = ({
           Move to parent folder
         </div>
       )}
+
+      {/* <FixedSizeList
+        itemCount={rows.length}
+        itemSize={50}
+        height={48}
+        width={calcColumnsWidth()}
+      >
+        {({ index, style }) => {
+          return (
+            <div ref={dropRef} style={style} className="tr">
+              <div
+                ref={dragRef}
+                style={{
+                  fontWeight: isMouseOverDiv ? "bold" : "",
+                  background: isMouseOverDiv ? "#EFF1F7" : "none",
+                  cursor: isMouseOverDiv ? "pointer" : "default",
+                }}
+                onMouseEnter={() => setIsMouseOverDiv(true)}
+                onMouseLeave={() => setIsMouseOverDiv(false)}
+                onMouseDown={(e) =>
+                  1 < checkList.length
+                    ? null
+                    : row.original.checkbox
+                    ? setCheckList([row.id])
+                    : null
+                }
+                onClick={(e) => {
+                  onClickItem(row);
+
+                  if (row.original.checkBox) {
+                    setCheckList([row.id]);
+                  }
+                }}
+                onContextMenu={(event) => onContextMenu(row, event)}
+              >
+                {row.cells.map((cell) => {
+                  // prepareRow(row);
+
+                  return (
+                    <>
+                      <div
+                        {...cell.getCellProps()}
+                        style={{
+                          ...cell.getCellProps().style,
+                          verticalAlign: "bottom",
+                        }}
+                        className="td"
+                      >
+                        {convertValueToType(cell)}
+                      </div>
+                    </>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        }}
+      </FixedSizeList> */}
+
       <div
         ref={dropRef}
         style={{
@@ -300,7 +365,13 @@ const Row = ({
                   {...cell.getCellProps()}
                   style={{
                     ...cell.getCellProps().style,
-                    verticalAlign: "bottom",
+                    verticalAlign: "middle",
+                    minHeight: "50px",
+                    boxSizing: "border-box",
+                    // height: "80px",
+                    lineHeight: rowHeight ? rowHeight : "50px",
+                    // height: rowHeight ? rowHeight : "default",
+                    // lineHeight: rowHeight ? rowHeight : "default",
                   }}
                   className="td"
                 >
@@ -309,8 +380,10 @@ const Row = ({
               </>
             );
           })}
+        </div>
+      </div>
 
-          {/* {row.cells.map((cell) => {
+      {/* {row.cells.map((cell) => {
           prepareRow(row);
           return (
             <>
@@ -392,8 +465,6 @@ const Row = ({
             </>
           );
         })} */}
-        </div>
-      </div>
     </>
   );
 };

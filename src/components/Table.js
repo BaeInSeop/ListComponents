@@ -74,7 +74,7 @@ const Styles = styled.div`
     .td,
     .checkbox {
       margin: 0;
-      padding: 0.5rem;
+      /* padding: 0.5rem; */
       border-bottom: 1px solid #ccc;
       border-right: 0;
 
@@ -105,9 +105,8 @@ const Styles = styled.div`
 
 const Table = ({
   columns,
-  // setColumns,
   data,
-  // setData,
+  rowHeight,
   linkProps,
   avatarProps,
   iconProps,
@@ -391,7 +390,11 @@ const Table = ({
             >
               <div
                 {...getTableBodyProps()}
-                style={{ overflowX: "auto", width: calcColumnsWidth() }}
+                style={{
+                  overflowX: "auto",
+                  width: calcColumnsWidth(),
+                  height: "800px",
+                }}
               >
                 {rows.map(
                   (row, index) =>
@@ -400,6 +403,7 @@ const Table = ({
                         rows={rows}
                         index={index}
                         row={row}
+                        rowHeight={rowHeight}
                         moveRow={moveRow}
                         checkList={checkList}
                         setCheckList={setCheckList}
@@ -417,6 +421,7 @@ const Table = ({
                         onClickItem={onClickItem}
                         onContextMenu={onContextMenu}
                         onBackward={onBackward}
+                        calcColumnsWidth={calcColumnsWidth}
                         {...row.getRowProps()}
                       />
                     )

@@ -13,6 +13,7 @@ import ReactLoading from "react-loading";
 function ListComponent({
   // header,
   // records,
+  rowHeight,
   linkProps,
   avatarProps,
   iconProps,
@@ -70,7 +71,7 @@ function ListComponent({
         modified: new Date(),
         extension: "folder",
         profile: "Sample",
-        link: "https://www.google.com",
+        link: "https://www.googlegooglegooglegooglegoogle.com",
         thumbnail:
           "https://cdn3.iconfinder.com/data/icons/feather-5/24/download-512.png",
       },
@@ -160,10 +161,16 @@ function ListComponent({
   const rowTimeFormat = timeFormat ? timeFormat : "YYYY-MM-DD HH:mm:ss";
 
   return (
-    <div>
+    <div
+      className="table"
+      style={{
+        overflow: "auto",
+      }}
+    >
       <Table
         columns={columns}
         data={records}
+        rowHeight={rowHeight}
         linkProps={rowLinkProps}
         avatarProps={rowAvatarProps}
         imageProps={rowImageProps}

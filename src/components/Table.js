@@ -33,7 +33,7 @@ import AddUtility from "./AddUtility";
 
 // 스타일 설정
 const Styles = styled.div`
-  padding: 1rem;
+  /* padding: 1rem; */
   font-family: Open Sans, sans-serif;
   font-size: 13px;
 
@@ -59,7 +59,7 @@ const Styles = styled.div`
     .tr {
       :last-child {
         .td {
-          border-bottom: 0;
+          /* border-bottom: 0; */
         }
       }
     }
@@ -74,7 +74,7 @@ const Styles = styled.div`
     .td,
     .checkbox {
       margin: 0;
-      /* padding: 0.5rem; */
+      padding: 0.5rem;
       border-bottom: 1px solid #ccc;
       border-right: 0;
 
@@ -270,8 +270,47 @@ const Table = ({
 
     columns.map((col) => (col.width ? (width += col.width) : (width += 150)));
 
-    return width + 2;
+    return width;
   };
+
+  const RenderRow = useCallback(
+    ({ index, style }) => {
+      const row = rows[index];
+
+      prepareRow(row);
+      return (
+        <div {...row.getRowProps({ style })}>
+          <Row
+            rows={rows}
+            index={index}
+            row={row}
+            rowHeight={rowHeight}
+            style={style}
+            moveRow={moveRow}
+            checkList={checkList}
+            setCheckList={setCheckList}
+            prepareRow={prepareRow}
+            setModalData={setModalData}
+            // setData={setData}
+            linkProps={linkProps}
+            avatarProps={avatarProps}
+            iconProps={iconProps}
+            timeFormat={timeFormat}
+            // setCurrentFolder={setCurrentFolder}
+            // resizeWidth={resizeWidth}
+            // onUpdateItem={onUpdateItem}
+            // onDeleteItem={onDeleteItem}
+            onClickItem={onClickItem}
+            onContextMenu={onContextMenu}
+            onBackward={onBackward}
+            calcColumnsWidth={calcColumnsWidth}
+            {...row.getRowProps()}
+          />
+        </div>
+      );
+    },
+    [prepareRow, rows, checkList]
+  );
 
   return (
     <>
@@ -386,46 +425,57 @@ const Table = ({
 
             <FileDrop
               onDrop={(files, event) => onDropFile(files, event)}
-              style={{ overflowX: "auto" }}
+              style={{ overflow: "hidden" }}
             >
               <div
                 {...getTableBodyProps()}
                 style={{
-                  overflowX: "auto",
-                  width: calcColumnsWidth(),
-                  height: "800px",
+                  // width: calcColumnsWidth(),
+                  height: "100vh",
                 }}
               >
-                {rows.map(
-                  (row, index) =>
-                    prepareRow(row) || (
-                      <Row
-                        rows={rows}
-                        index={index}
-                        row={row}
-                        rowHeight={rowHeight}
-                        moveRow={moveRow}
-                        checkList={checkList}
-                        setCheckList={setCheckList}
-                        prepareRow={prepareRow}
-                        setModalData={setModalData}
-                        // setData={setData}
-                        linkProps={linkProps}
-                        avatarProps={avatarProps}
-                        iconProps={iconProps}
-                        timeFormat={timeFormat}
-                        // setCurrentFolder={setCurrentFolder}
-                        // resizeWidth={resizeWidth}
-                        // onUpdateItem={onUpdateItem}
-                        // onDeleteItem={onDeleteItem}
-                        onClickItem={onClickItem}
-                        onContextMenu={onContextMenu}
-                        onBackward={onBackward}
-                        calcColumnsWidth={calcColumnsWidth}
-                        {...row.getRowProps()}
-                      />
-                    )
-                )}
+                <AutoSizer>
+                  {({ height, width }) => (
+                    <FixedSizeList
+                      height={height}
+                      itemCount={rows.length}
+                      itemSize={rowHeight}
+                      width={width}
+                    >
+                      {RenderRow}
+                      {/* {rows.map(
+                    (row, index) =>
+                      prepareRow(row) || (
+                        <Row
+                          rows={rows}
+                          index={index}
+                          row={row}
+                          rowHeight={rowHeight}
+                          moveRow={moveRow}
+                          checkList={checkList}
+                          setCheckList={setCheckList}
+                          prepareRow={prepareRow}
+                          setModalData={setModalData}
+                          // setData={setData}
+                          linkProps={linkProps}
+                          avatarProps={avatarProps}
+                          iconProps={iconProps}
+                          timeFormat={timeFormat}
+                          // setCurrentFolder={setCurrentFolder}
+                          // resizeWidth={resizeWidth}
+                          // onUpdateItem={onUpdateItem}
+                          // onDeleteItem={onDeleteItem}
+                          onClickItem={onClickItem}
+                          onContextMenu={onContextMenu}
+                          onBackward={onBackward}
+                          calcColumnsWidth={calcColumnsWidth}
+                          {...row.getRowProps()}
+                        />
+                      )
+                  )} */}
+                    </FixedSizeList>
+                  )}
+                </AutoSizer>
               </div>
             </FileDrop>
           </div>

@@ -52,23 +52,33 @@ const records = React.useMemo(
 );
 
 return (
-  <ListComponent
-    columns={columns}
-    records={records}
-    onMoveRow={(dragIndex, hoverIndex, movedItem, droppedRow) => {}}
-    onClickItem={(item) => {}}
-    onContextMenu={(row, event) => {}}
-    onFileDrop={(droppedFile) => {}}
-    onSelectedRows={(records) => {}}
-  />
+  <ListComponent columns={columns} records={records} />
 );
 ```
+
+## `ListComponent - Props`
+
+| Key            | Required |     Type | Desc                              | Default                           |
+| -------------- | :------: | -------: | --------------------------------- | --------------------------------- |
+| columns        |    V     |    Array | Define Columns                    |                                   |
+| records        |    V     |    Array | Define Records                    |                                   |
+| rowHeight      |          |   Number | Resize Row Height                 | 50                                |
+| avatarProps    |          |   Object | Custom Avatar type Props          | size : 30, round : 50%            |
+| rowIconProps   |          |   Object | Custom Icon type Props            | size : 30, icons : react-icons/fa |
+| linkProps      |          |   Object | Custom Link type Props            | target : \_blank, text : value    |
+| imageProps     |          |   Object | Custom Thumbnail type Props       | target : \_blank, size : 30       |
+| timeFormat     |          |   String | Custom Time type Props            | YYYY-MM-DD HH:mm:ss               |
+| onMoveRecord   |          | Function | Callback when record moved        |                                   |
+| onClickRecord  |          | Function | Callback when record clicked      |                                   |
+| onContextMenu  |          | Function | Callback when mouse right clicked |                                   |
+| onFileDrop     |          | Function | Callback when local file dropped  |                                   |
+| onSelectedRows |          | Function | Callback when checkbox clicked    |                                   |
 
 ## `Column - Props`
 
 | Key      | Required |   Type | Desc                  | Vaild Values                                    |
 | -------- | :------: | -----: | --------------------- | ----------------------------------------------- |
-| accessor |    V     |  Array | Access to Record Key  |                                                 |
+| accessor |    V     | String | Access to Record Key  |                                                 |
 | type     |          | String | Resizing border width | text, time, icon, avatar, link, checkbox, image |
 | width    |          | Number | Define Column Width   | 50, 120, 300 etc ...                            |
 
@@ -159,7 +169,13 @@ const records = React.useMemo(
 
 ## User Custom
 
-### you want to custom Icons ?
+### want to resize Row height ?
+
+```js
+<ListComponent columns={columns} records={records} rowHeight={90} />
+```
+
+### want to custom Icons ?
 
 ```js
 <ListComponent
@@ -170,7 +186,7 @@ const records = React.useMemo(
     icons: {
       folder:
         "https://cdn3.iconfinder.com/data/icons/feather-5/24/folder-512.png",
-      file: <FaRegFile width={30} height={30} />,
+      file: <FaRegFile />,
     },
   }}
 />
@@ -179,7 +195,7 @@ const records = React.useMemo(
 ※ You can use react-icons and image url
 And also can add icon key
 
-### you want to custom Avatar size or round ?
+### want to custom Avatar size or round ?
 
 ```js
 <ListComponent
@@ -192,7 +208,7 @@ And also can add icon key
 />
 ```
 
-### you want to custom Link property ?
+### want to custom Link property ?
 
 ```js
 <ListComponent
@@ -205,7 +221,7 @@ And also can add icon key
 />
 ```
 
-### you want to custom Thumbnail size ?
+### want to custom Thumbnail size ?
 
 ```js
 <ListComponent
@@ -218,7 +234,7 @@ And also can add icon key
 />
 ```
 
-### you want to custom Timeformat ?
+### want to custom Timeformat ?
 
 ```js
 <ListComponent columns={columns} records={records} timeFormat={"YY/MM/DD"} />

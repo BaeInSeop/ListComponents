@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import moment from "moment";
 import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { getEmptyImage } from "react-dnd-html5-backend";
@@ -8,6 +8,7 @@ import Avatar from "react-avatar";
 import RenderIcon from "./RenderIcon";
 import ReactLoading from "react-loading";
 
+import AutoSizer from "react-virtualized-auto-sizer";
 import { FixedSizeList } from "react-window";
 
 const Row = ({
@@ -16,6 +17,7 @@ const Row = ({
   index,
   moveRow,
   rowHeight,
+  style,
   prepareRow,
   checkList,
   setCheckList,
@@ -79,20 +81,20 @@ const Row = ({
       // When dragging upwards, only move when the cursor is above 50%
       // Dragging downwards
       if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
-        setEnterFolderIndex(null);
+        // setEnterFolderIndex(null);
         return;
       }
       // Dragging upwards
       if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
-        setEnterFolderIndex(null);
+        // setEnterFolderIndex(null);
         return;
       }
       // Time to actually perform the action
 
       if ("folder" === rows[hoverIndex].original.extension) {
-        setEnterFolderIndex(rows[hoverIndex].original.id);
+        // setEnterFolderIndex(rows[hoverIndex].original.id);
       } else {
-        setEnterFolderIndex(null);
+        // setEnterFolderIndex(null);
       }
 
       // Note: we're mutating the monitor item here!
@@ -168,7 +170,7 @@ const Row = ({
         return (
           <div
             style={{
-              display: "inline-block",
+              display: "block",
               width: "100%",
               height: "100%",
               overflow: "hidden",
@@ -262,71 +264,13 @@ const Row = ({
           Move to parent folder
         </div>
       )}
-
-      {/* <FixedSizeList
-        itemCount={rows.length}
-        itemSize={50}
-        height={48}
-        width={calcColumnsWidth()}
-      >
-        {({ index, style }) => {
-          return (
-            <div ref={dropRef} style={style} className="tr">
-              <div
-                ref={dragRef}
-                style={{
-                  fontWeight: isMouseOverDiv ? "bold" : "",
-                  background: isMouseOverDiv ? "#EFF1F7" : "none",
-                  cursor: isMouseOverDiv ? "pointer" : "default",
-                }}
-                onMouseEnter={() => setIsMouseOverDiv(true)}
-                onMouseLeave={() => setIsMouseOverDiv(false)}
-                onMouseDown={(e) =>
-                  1 < checkList.length
-                    ? null
-                    : row.original.checkbox
-                    ? setCheckList([row.id])
-                    : null
-                }
-                onClick={(e) => {
-                  onClickItem(row);
-
-                  if (row.original.checkBox) {
-                    setCheckList([row.id]);
-                  }
-                }}
-                onContextMenu={(event) => onContextMenu(row, event)}
-              >
-                {row.cells.map((cell) => {
-                  // prepareRow(row);
-
-                  return (
-                    <>
-                      <div
-                        {...cell.getCellProps()}
-                        style={{
-                          ...cell.getCellProps().style,
-                          verticalAlign: "bottom",
-                        }}
-                        className="td"
-                      >
-                        {convertValueToType(cell)}
-                      </div>
-                    </>
-                  );
-                })}
-              </div>
-            </div>
-          );
-        }}
-      </FixedSizeList> */}
-
       <div
         ref={dropRef}
         style={{
+          minWidth: calcColumnsWidth(),
           fontWeight: isDragging ? "bold" : "",
-          border:
-            row.original.id === enterFolderIndex ? "1px solid red" : "none",
+          // border:
+          //   row.original.id === enterFolderIndex ? "1px solid red" : "none",
           userSelect: "none",
         }}
         className="tr"
@@ -368,8 +312,9 @@ const Row = ({
                     verticalAlign: "middle",
                     minHeight: "50px",
                     boxSizing: "border-box",
-                    // height: "80px",
-                    lineHeight: rowHeight ? rowHeight : "50px",
+                    height: `${rowHeight ? rowHeight : 50}px`,
+                    lineHeight: `${rowHeight ? rowHeight : 50}px`,
+                    padding: "0.2rem",
                     // height: rowHeight ? rowHeight : "default",
                     // lineHeight: rowHeight ? rowHeight : "default",
                   }}

@@ -28,7 +28,9 @@ const Preview = ({ checkList }) => {
     >
       {"column" === item.type
         ? item.header
-        : `${checkList.length} 개 파일 이동`}
+        : 0 < checkList.length
+        ? `${checkList.length} 개의 아이템 이동`
+        : `1개의 아이템 이동`}
     </div>
   ) : null;
 };

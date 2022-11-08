@@ -10,8 +10,8 @@ import {
 import ReactLoading from "react-loading";
 
 function ListComponent({
-  columns,
-  records,
+  // columns,
+  // records,
   rowHeight,
   linkProps,
   avatarProps,
@@ -24,74 +24,80 @@ function ListComponent({
   onFileDrop,
   onContextMenu,
   onBackward,
+  onChangeCurrentPath,
+  useBackward,
 }) {
-  // const columns = React.useMemo(
-  //   () => [
-  //     {
-  //       accessor: "checkbox",
-  //       type: "checkbox",
-  //       width: 50,
-  //     },
-  //     {
-  //       accessor: "title",
-  //       type: "text",
-  //     },
-  //     {
-  //       accessor: "modified",
-  //       type: "time",
-  //     },
-  //     {
-  //       accessor: "extension",
-  //       type: "icon",
-  //       width: 50,
-  //     },
-  //     {
-  //       accessor: "profile",
-  //       type: "avatar",
-  //       width: 70,
-  //     },
-  //     {
-  //       accessor: "link",
-  //       type: "link",
-  //     },
-  //     {
-  //       accessor: "thumbnail",
-  //       type: "image",
-  //     },
-  //   ],
-  //   []
-  // );
+  const columns = React.useMemo(
+    () => [
+      {
+        accessor: "checkbox",
+        type: "checkbox",
+        width: 50,
+      },
+      {
+        accessor: "title",
+        type: "text",
+      },
+      {
+        accessor: "modified",
+        type: "time",
+      },
+      {
+        accessor: "extension",
+        type: "icon",
+        width: 50,
+      },
+      {
+        accessor: "profile",
+        type: "avatar",
+        width: 70,
+      },
+      {
+        accessor: "link",
+        type: "link",
+      },
+      {
+        accessor: "thumbnail",
+        type: "image",
+      },
+    ],
+    []
+  );
 
-  // const records = React.useMemo(
-  //   () => [
-  //     {
-  //       checkbox: false,
-  //       title: "Sample_1",
-  //       modified: "2010-10-17",
-  //       extension: "folder",
-  //       profile: "Sample",
-  //       link: "https://www.googlegooglegooglegooglegoogle.com",
-  //       thumbnail:
-  //         "https://cdn3.iconfinder.com/data/icons/feather-5/24/download-512.png",
-  //     },
-  //     {
-  //       checkbox: true,
-  //       title: "Test_File",
-  //       extension: "file",
-  //       profile: "Test",
-  //       link: "https://www.naver.com",
-  //       thumbnail:
-  //         "https://cdn4.iconfinder.com/data/icons/pop-scenes/1000/navigation___explore_space_exploration_astronaut_planets_planet-512.png",
-  //     },
-  //     {
-  //       checkbox: true,
-  //       title: "Test_Pdf",
-  //       modified: "2010-10-17",
-  //       extension: "pdf",
-  //     },
-  //   ],
-  //   []
-  // );
+  const records = React.useMemo(
+    () => [
+      {
+        pk: 1000,
+        checkbox: false,
+        title:
+          "Sample_1rSample_1rSample_1rSample_1rSample_1rSample_1rSample_1rSample_1rSample_1rSample_1rSample_1rSample_1r",
+        modified: "2010-10-17",
+        extension: "folder",
+        profile: "Sample",
+        isFolder: true,
+        link: "https://www.googlegooglegooglegooglegoogle.com",
+        thumbnail:
+          "https://cdn3.iconfinder.com/data/icons/feather-5/24/download-512.png",
+      },
+      {
+        checkbox: true,
+        title: "Test_File",
+        extension: "file",
+        profile: "Test",
+        link: "https://www.naver.com",
+        thumbnail:
+          "https://cdn4.iconfinder.com/data/icons/pop-scenes/1000/navigation___explore_space_exploration_astronaut_planets_planet-512.png",
+      },
+      {
+        checkbox: true,
+        title: "Test_Pdf",
+        modified: "2010-10-17",
+        extension: "pdf",
+        readOnly: true,
+      },
+    ],
+    []
+  );
 
   // const [columns, setColumns] = useState(
   //   header.map((item) =>
@@ -216,6 +222,13 @@ function ListComponent({
             ? onBackward
             : () => {
                 console.log("Clicked Backward");
+              }
+        }
+        onChangeCurrentPath={
+          onChangeCurrentPath
+            ? onChangeCurrentPath
+            : (path) => {
+                console.log("Change Current Path : ", path);
               }
         }
       />

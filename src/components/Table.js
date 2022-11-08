@@ -111,21 +111,26 @@ const Table = ({
   avatarProps,
   iconProps,
   timeFormat,
-  onMoveRow,
-  onClickItem,
+  onMoveRecord,
+  onClickRecord,
   onFileDrop,
   onSelectedRows,
   onContextMenu,
   onBackward,
+  onChangeCurrentPath,
 }) => {
   // const [currentFolder, setCurrentFolder] = useState("home"); //현재 폴더
 
   // const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
   // const [maximumRow, setMaximumRow] = useState(maximumRowCount); // 아이템 최대 갯수
   // const [totalRowCount, setTotalRowCount] = useState(totalCount); // 불러온 아이템 최대 개수
+
   const [checkList, setCheckList] = useState([]); // 체크된 아이템
   const [isOpenDetailModal, setIsOpenDetailModal] = useState(false); // 상세보기 Open State
   const [modalData, setModalData] = useState(); // 상세보기 데이터 State
+  const [currentPathKey, setCurrentPathKey] = useState(-1);
+  const [isMouseOverBackward, setIsMouseOverBackward] = useState(false);
+
   // const [showContextMenu, setShowContextMenu] = useState(false); // 컨텍스트 메뉴 Open Sate
 
   // 현재 경로가 변경될 시 목록 최신화
@@ -162,6 +167,10 @@ const Table = ({
   useEffect(() => {
     onSelectedRows(checkList);
   }, [checkList]);
+
+  useEffect(() => {
+    onChangeCurrentPath(currentPathKey);
+  }, [currentPathKey]);
 
   const {
     getTableProps,
@@ -238,7 +247,7 @@ const Table = ({
     if (dragIndex === hoverIndex) {
       return;
     } else {
-      onMoveRow(dragIndex, hoverIndex, movedItem, droppedRow);
+      onMoveRecord(dragIndex, hoverIndex, movedItem, droppedRow);
     }
   };
 
@@ -291,6 +300,8 @@ const Table = ({
             setCheckList={setCheckList}
             prepareRow={prepareRow}
             setModalData={setModalData}
+            currentPathKey={currentPathKey}
+            setCurrentPathKey={setCurrentPathKey}
             // setData={setData}
             linkProps={linkProps}
             avatarProps={avatarProps}
@@ -300,10 +311,11 @@ const Table = ({
             // resizeWidth={resizeWidth}
             // onUpdateItem={onUpdateItem}
             // onDeleteItem={onDeleteItem}
-            onClickItem={onClickItem}
+            onClickRecord={onClickRecord}
             onContextMenu={onContextMenu}
             onBackward={onBackward}
             calcColumnsWidth={calcColumnsWidth}
+            onChangeCurrentPath={onChangeCurrentPath}
             {...row.getRowProps()}
           />
         </div>
@@ -434,6 +446,26 @@ const Table = ({
                   height: "100vh",
                 }}
               >
+                <div
+                  className="td"
+                  style={{
+                    width: calcColumnsWidth(),
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    minHeight: "50px",
+                    boxSizing: "border-box",
+                    height: `${rowHeight ? rowHeight : 50}px`,
+                    // lineHeight: `${rowHeight ? rowHeight : 50}px`,
+                    cursor: "pointer",
+                    background: isMouseOverBackward ? "#EFF1F7" : "none",
+                  }}
+                  onClick={() => onBackward()}
+                  onMouseEnter={() => setIsMouseOverBackward(true)}
+                  onMouseLeave={() => setIsMouseOverBackward(false)}
+                >
+                  Move to parent folder
+                </div>
                 <AutoSizer>
                   {({ height, width }) => (
                     <FixedSizeList

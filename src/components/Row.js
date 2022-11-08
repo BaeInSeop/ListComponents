@@ -22,11 +22,13 @@ const Row = ({
   checkList,
   setCheckList,
   setModalData,
+  currentPathKey,
+  setCurrentPathKey,
   // setCurrentFolder,
   // resizeWidth,
   // onUpdateItem,
   // onDeleteItem,
-  onClickItem,
+  onClickRecord,
   onContextMenu,
   linkProps,
   avatarProps,
@@ -34,6 +36,7 @@ const Row = ({
   timeFormat,
   onBackward,
   calcColumnsWidth,
+  onChangeCurrentPath,
 }) => {
   const dropRef = useRef(null);
   const dragRef = useRef(null);
@@ -41,7 +44,6 @@ const Row = ({
 
   const [isMouseOverDiv, setIsMouseOverDiv] = useState(false);
   const [isMouseOverSpan, setIsMouseOverSpan] = useState(false);
-  const [isMouseOverBackward, setIsMouseOverBackward] = useState(false);
 
   const [enterFolderIndex, setEnterFolderIndex] = useState(null);
 
@@ -114,7 +116,11 @@ const Row = ({
   });
 
   const clickItem = (row) => {
-    onClickItem(row);
+    onClickRecord(row);
+
+    // if (row.isFolder) {
+    //   setCurrentPathKey(row.pk);
+    // }
   };
 
   // const onUpdateClick = (row) => {
@@ -134,21 +140,18 @@ const Row = ({
     preview(getEmptyImage(), { captureDraggingState: true });
   }, [preview]);
 
-  useEffect(() => {
-    var checkBox = document.getElementById(row.id);
+  // useEffect(() => {
+  //   var checkBox = document.getElementById(row.id);
 
-    if (checkBox) {
-      checkBox.addEventListener("mousedown", (e) => {
-        e.stopImmediatePropagation();
-      });
-    }
-  }, [checkList]);
+  //   if (checkBox) {
+  //     checkBox.addEventListener("click", (e) => {
+  //       e.stopImmediatePropagation();
+  //     });
+  //   }
+  // }, [checkList]);
 
   const convertValueToType = (cell) => {
     switch (cell.column.type) {
-      case "text":
-        return cell.render("Cell");
-
       case "time":
         return convertTimeFormat(cell.value);
 
@@ -201,8 +204,23 @@ const Row = ({
           </a>
         );
 
+      case "text":
       default:
-        return cell.render("Cell");
+        return (
+          <div
+            style={{
+              display: "block",
+              width: "100%",
+              height: "100%",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+              boxSizing: "border-box",
+            }}
+          >
+            {cell.render("Cell")}
+          </div>
+        );
     }
   };
 
@@ -234,6 +252,7 @@ const Row = ({
           type="checkbox"
           id={row.id}
           onChange={(e) => {
+            // e.stopPropagation();
             if (e.target.checked) {
               setCheckList([...checkList, row.id]);
             } else {
@@ -248,22 +267,6 @@ const Row = ({
 
   return (
     <>
-      {false && 0 === index && (
-        <div
-          className="td"
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            cursor: "pointer",
-            background: isMouseOverBackward ? "#EFF1F7" : "none",
-          }}
-          onClick={() => onBackward()}
-          onMouseEnter={() => setIsMouseOverBackward(true)}
-          onMouseLeave={() => setIsMouseOverBackward(false)}
-        >
-          Move to parent folder
-        </div>
-      )}
       <div
         ref={dropRef}
         style={{
@@ -271,7 +274,7 @@ const Row = ({
           fontWeight: isDragging ? "bold" : "",
           // border:
           //   row.original.id === enterFolderIndex ? "1px solid red" : "none",
-          userSelect: "none",
+          // userSelect: "none",
         }}
         className="tr"
       >
@@ -284,19 +287,18 @@ const Row = ({
           }}
           onMouseEnter={() => setIsMouseOverDiv(true)}
           onMouseLeave={() => setIsMouseOverDiv(false)}
-          onMouseDown={(e) =>
-            1 < checkList.length
-              ? null
-              : row.original.checkbox
-              ? setCheckList([row.id])
-              : null
-          }
+          // onMouseDown={(e) =>
+          //   1 < checkList.length
+          //     ? null
+          //     : row.original.checkbox
+          //     ? setCheckList([row.id])
+          //     : null
+          // }
           onClick={(e) => {
-            onClickItem(row);
-
-            if (row.original.checkBox) {
-              setCheckList([row.id]);
-            }
+            // onClickRecord(row.original);
+            // if (row.original.checkBox) {
+            //   setCheckList([row.id]);
+            // }
           }}
           onContextMenu={(event) => onContextMenu(row, event)}
         >
@@ -315,10 +317,14 @@ const Row = ({
                     height: `${rowHeight ? rowHeight : 50}px`,
                     lineHeight: `${rowHeight ? rowHeight : 50}px`,
                     padding: "0.2rem",
-                    // height: rowHeight ? rowHeight : "default",
-                    // lineHeight: rowHeight ? rowHeight : "default",
+                    opacity: `${row.original.readOnly ? 0.5 : 1}`,
                   }}
                   className="td"
+                  onClick={() =>
+                    "checkbox" !== cell.column.type
+                      ? clickItem(row.original)
+                      : null
+                  }
                 >
                   {convertValueToType(cell)}
                 </div>

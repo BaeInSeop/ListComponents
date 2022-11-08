@@ -46,6 +46,7 @@ const records = React.useMemo(
       col1: false,
       col2: "안녕",
       col3: "하세요",
+      readOnly : true // Default is False
     },
   ],
   []
@@ -158,7 +159,8 @@ const records = React.useMemo(
       checkbox: true,
       title: "Test_Pdf",
       modified: moment(),
-      extension: "pdf",
+      extension: "loading",
+      readOnly: true,
     },
   ],
   []

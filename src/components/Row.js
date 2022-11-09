@@ -22,8 +22,6 @@ const Row = ({
   checkList,
   setCheckList,
   setModalData,
-  currentPathKey,
-  setCurrentPathKey,
   // setCurrentFolder,
   // resizeWidth,
   // onUpdateItem,
@@ -34,9 +32,7 @@ const Row = ({
   avatarProps,
   iconProps,
   timeFormat,
-  onBackward,
   calcColumnsWidth,
-  onChangeCurrentPath,
 }) => {
   const dropRef = useRef(null);
   const dragRef = useRef(null);
@@ -117,10 +113,6 @@ const Row = ({
 
   const clickItem = (row) => {
     onClickRecord(row);
-
-    // if (row.isFolder) {
-    //   setCurrentPathKey(row.pk);
-    // }
   };
 
   // const onUpdateClick = (row) => {
@@ -134,7 +126,11 @@ const Row = ({
   const opacity = isDragging ? 0 : 1;
 
   // preview(drop(dropRef));
-  drag(drop(dragRef));
+  if (row.original.isLock) {
+    drop(dragRef);
+  } else {
+    drag(drop(dragRef));
+  }
 
   useEffect(() => {
     preview(getEmptyImage(), { captureDraggingState: true });
@@ -190,6 +186,10 @@ const Row = ({
 
       case "checkbox":
         if (!cell.value) {
+          return;
+        }
+
+        if (row.original.isLock) {
           return;
         }
         return drawCheckBox();
@@ -270,6 +270,7 @@ const Row = ({
       <div
         ref={dropRef}
         style={{
+          width: "100%",
           minWidth: calcColumnsWidth(),
           fontWeight: isDragging ? "bold" : "",
           // border:
@@ -284,6 +285,7 @@ const Row = ({
             fontWeight: isMouseOverDiv ? "bold" : "",
             background: isMouseOverDiv ? "#EFF1F7" : "none",
             cursor: isMouseOverDiv ? "pointer" : "default",
+            transition: "all 0.3s ease-out",
           }}
           onMouseEnter={() => setIsMouseOverDiv(true)}
           onMouseLeave={() => setIsMouseOverDiv(false)}
@@ -301,6 +303,7 @@ const Row = ({
             // }
           }}
           onContextMenu={(event) => onContextMenu(row, event)}
+          // draggable={false}
         >
           {row.cells.map((cell) => {
             prepareRow(row);
@@ -317,7 +320,13 @@ const Row = ({
                     height: `${rowHeight ? rowHeight : 50}px`,
                     lineHeight: `${rowHeight ? rowHeight : 50}px`,
                     padding: "0.2rem",
-                    opacity: `${row.original.readOnly ? 0.5 : 1}`,
+                    opacity: `${
+                      "checkbox" !== cell.column.type
+                        ? row.original.readOnly
+                          ? 0.5
+                          : 1
+                        : 1
+                    }`,
                   }}
                   className="td"
                   onClick={() =>

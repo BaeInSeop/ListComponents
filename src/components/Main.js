@@ -3,9 +3,9 @@ import ListComponent from "./ListComponent";
 
 const Main = () => {
   return (
-    <div>
+    <>
       <ListComponent />
-    </div>
+    </>
   );
 };
 

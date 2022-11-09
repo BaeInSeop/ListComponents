@@ -24,6 +24,8 @@ import Columns from "./Columns";
 import Search from "./Search";
 
 import "./css/ContextMenu.css";
+import "./css/FileDrop.css";
+
 import RenderModal from "./RenderModal";
 import DetailItem from "./DetailItem";
 import FolderPath from "./FolderPath";
@@ -36,10 +38,13 @@ const Styles = styled.div`
   /* padding: 1rem; */
   font-family: Open Sans, sans-serif;
   font-size: 13px;
+  width: 100%;
+  height: 100%;
 
   .table {
     border-spacing: 0;
     width: 100%;
+    height: 100%;
 
     .resizer {
       display: inline-block;
@@ -117,7 +122,7 @@ const Table = ({
   onSelectedRows,
   onContextMenu,
   onBackward,
-  onChangeCurrentPath,
+  useBackward,
 }) => {
   // const [currentFolder, setCurrentFolder] = useState("home"); //현재 폴더
 
@@ -128,7 +133,6 @@ const Table = ({
   const [checkList, setCheckList] = useState([]); // 체크된 아이템
   const [isOpenDetailModal, setIsOpenDetailModal] = useState(false); // 상세보기 Open State
   const [modalData, setModalData] = useState(); // 상세보기 데이터 State
-  const [currentPathKey, setCurrentPathKey] = useState(-1);
   const [isMouseOverBackward, setIsMouseOverBackward] = useState(false);
 
   // const [showContextMenu, setShowContextMenu] = useState(false); // 컨텍스트 메뉴 Open Sate
@@ -167,10 +171,6 @@ const Table = ({
   useEffect(() => {
     onSelectedRows(checkList);
   }, [checkList]);
-
-  useEffect(() => {
-    onChangeCurrentPath(currentPathKey);
-  }, [currentPathKey]);
 
   const {
     getTableProps,
@@ -282,6 +282,17 @@ const Table = ({
     return width;
   };
 
+  const onClickBackward = (parentKey) => {
+    // 잠시 대기
+    // if(0 === parentKey){
+    //   setCurrentPath({pk : parentKey});
+    // }
+    // else{
+    //   setCurrentPath({pk : parentKey});
+    // }
+    // onBackward(parentKey);
+  };
+
   const RenderRow = useCallback(
     ({ index, style }) => {
       const row = rows[index];
@@ -300,8 +311,6 @@ const Table = ({
             setCheckList={setCheckList}
             prepareRow={prepareRow}
             setModalData={setModalData}
-            currentPathKey={currentPathKey}
-            setCurrentPathKey={setCurrentPathKey}
             // setData={setData}
             linkProps={linkProps}
             avatarProps={avatarProps}
@@ -315,7 +324,6 @@ const Table = ({
             onContextMenu={onContextMenu}
             onBackward={onBackward}
             calcColumnsWidth={calcColumnsWidth}
-            onChangeCurrentPath={onChangeCurrentPath}
             {...row.getRowProps()}
           />
         </div>
@@ -347,12 +355,13 @@ const Table = ({
 
         <Styles>
           <div
-            {...getTableProps()}
-            className="table"
+            // {...getTableProps()}
+            // className="table"
             style={{
-              // pointerEvents: showContextMenu ? "none" : "initial",
               userSelect: "none",
               WebkitUserSelect: "none",
+              width: "100%",
+              height: "100%",
             }}
           >
             {/* {useColumn && (
@@ -437,77 +446,69 @@ const Table = ({
 
             <FileDrop
               onDrop={(files, event) => onDropFile(files, event)}
-              style={{ overflow: "hidden" }}
+              style={{ overflow: "hidden", width: "100%", height: "100%" }}
             >
               <div
                 {...getTableBodyProps()}
                 style={{
                   // width: calcColumnsWidth(),
-                  height: "100vh",
+                  height: "100%",
                 }}
               >
-                <div
-                  className="td"
-                  style={{
-                    width: calcColumnsWidth(),
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    minHeight: "50px",
-                    boxSizing: "border-box",
-                    height: `${rowHeight ? rowHeight : 50}px`,
-                    // lineHeight: `${rowHeight ? rowHeight : 50}px`,
-                    cursor: "pointer",
-                    background: isMouseOverBackward ? "#EFF1F7" : "none",
-                  }}
-                  onClick={() => onBackward()}
-                  onMouseEnter={() => setIsMouseOverBackward(true)}
-                  onMouseLeave={() => setIsMouseOverBackward(false)}
-                >
-                  Move to parent folder
-                </div>
-                <AutoSizer>
-                  {({ height, width }) => (
-                    <FixedSizeList
-                      height={height}
-                      itemCount={rows.length}
-                      itemSize={rowHeight}
-                      width={width}
-                    >
-                      {RenderRow}
-                      {/* {rows.map(
-                    (row, index) =>
-                      prepareRow(row) || (
-                        <Row
-                          rows={rows}
-                          index={index}
-                          row={row}
-                          rowHeight={rowHeight}
-                          moveRow={moveRow}
-                          checkList={checkList}
-                          setCheckList={setCheckList}
-                          prepareRow={prepareRow}
-                          setModalData={setModalData}
-                          // setData={setData}
-                          linkProps={linkProps}
-                          avatarProps={avatarProps}
-                          iconProps={iconProps}
-                          timeFormat={timeFormat}
-                          // setCurrentFolder={setCurrentFolder}
-                          // resizeWidth={resizeWidth}
-                          // onUpdateItem={onUpdateItem}
-                          // onDeleteItem={onDeleteItem}
-                          onClickItem={onClickItem}
-                          onContextMenu={onContextMenu}
-                          onBackward={onBackward}
-                          calcColumnsWidth={calcColumnsWidth}
-                          {...row.getRowProps()}
-                        />
-                      )
-                  )} */}
-                    </FixedSizeList>
-                  )}
-                </AutoSizer>
+                {useBackward && (
+                  <div
+                    className="td"
+                    style={{
+                      width: "100%",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      minHeight: "50px",
+                      boxSizing: "border-box",
+                      height: `${rowHeight ? rowHeight : 50}px`,
+                      // lineHeight: `${rowHeight ? rowHeight : 50}px`,
+                      cursor: "pointer",
+                      background: isMouseOverBackward ? "#EFF1F7" : "none",
+                    }}
+                    onClick={() => onBackward()}
+                    onMouseEnter={() => setIsMouseOverBackward(true)}
+                    onMouseLeave={() => setIsMouseOverBackward(false)}
+                  >
+                    Move to parent folder
+                  </div>
+                )}
+
+                {0 < rows.length ? (
+                  <AutoSizer>
+                    {({ height, width }) => (
+                      <div>
+                        <FixedSizeList
+                          height={height}
+                          itemCount={rows.length}
+                          itemSize={rowHeight}
+                          width={width}
+                        >
+                          {RenderRow}
+                        </FixedSizeList>
+                      </div>
+                    )}
+                  </AutoSizer>
+                ) : (
+                  <div
+                    className="td"
+                    style={{
+                      width: "100%",
+                      height: `calc(100% - ${rowHeight}px`,
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      boxSizing: "border-box",
+                      // lineHeight: `${rowHeight ? rowHeight : 50}px`,
+                    }}
+                  >
+                    No Data
+                  </div>
+                )}
               </div>
             </FileDrop>
           </div>

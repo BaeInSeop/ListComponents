@@ -1,6 +1,6 @@
 {
   "name": "@baronote/listcomponents",
-  "version": "0.1.6",
+  "version": "0.1.15",
   "private": false,
   "module": "dist/index.js",
   "main": "dist/index.js",

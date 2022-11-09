@@ -69,6 +69,8 @@ return (
 | linkProps      |          |   Object | Custom Link type Props            | target : \_blank, text : value    |
 | imageProps     |          |   Object | Custom Thumbnail type Props       | target : \_blank, size : 30       |
 | timeFormat     |          |   String | Custom Time type Props            | YYYY-MM-DD HH:mm:ss               |
+| useBackward    |          |  Boolean | Display Backward                  | false                             |
+| onBackward     |          | Function | Callback when backward clicked    |                                   |
 | onMoveRecord   |          | Function | Callback when record moved        |                                   |
 | onClickRecord  |          | Function | Callback when record clicked      |                                   |
 | onContextMenu  |          | Function | Callback when mouse right clicked |                                   |
@@ -94,6 +96,13 @@ return (
 | link        | String  |                                                'http://www.google.com', etc... |
 | checkbox    | Boolean |                                                                    true, false |
 | image       | String  | 'https://cdn3.iconfinder.com/data/icons/feather-5/24/download-512.png', etc... |
+
+## `Record - Other Props`
+
+| Key      | Type    | Desc                                  | Default |
+| -------- | ------- | ------------------------------------- | ------- |
+| isLock   | Boolean | Cannot Move Item and disable checkbox | false   |
+| readOnly | Boolean | Opacity 0.5                           | false   |
 
 ## Example
 

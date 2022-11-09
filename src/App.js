@@ -4,7 +4,7 @@ import Main from "./components/Main";
 
 function App() {
   return (
-    <div className="App">
+    <div style={{ width: "370px", height: "800px" }}>
       <Main />
     </div>
   );

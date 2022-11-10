@@ -10,10 +10,13 @@ import ReactLoading from "react-loading";
 
 import AutoSizer from "react-virtualized-auto-sizer";
 import { FixedSizeList } from "react-window";
+import styled from "styled-components";
 
 const Row = ({
   rows,
   row,
+  data,
+  setData,
   index,
   moveRow,
   rowHeight,
@@ -33,6 +36,7 @@ const Row = ({
   iconProps,
   timeFormat,
   calcColumnsWidth,
+  isBaronote,
 }) => {
   const dropRef = useRef(null);
   const dragRef = useRef(null);
@@ -49,7 +53,14 @@ const Row = ({
       const dragIndex = item.index;
       const hoverIndex = index;
       // console.log(item, row);
-      moveRow(dragIndex, hoverIndex, item, row);
+      moveRow(
+        dragIndex,
+        hoverIndex,
+        0 < data.filter((record) => record.checked).length
+          ? data.filter((record) => record.checked)
+          : [item],
+        row
+      );
       setEnterFolderIndex(null);
     },
     hover(item, monitor) {
@@ -126,14 +137,12 @@ const Row = ({
   const opacity = isDragging ? 0 : 1;
 
   // preview(drop(dropRef));
-  if (row.original.isLock) {
-    drop(dragRef);
-  } else {
-    drag(drop(dragRef));
-  }
+  drag(drop(dragRef));
 
   useEffect(() => {
-    preview(getEmptyImage(), { captureDraggingState: true });
+    if (1 < data.filter((item) => item.checked).length) {
+      preview(getEmptyImage(), { captureDraggingState: true });
+    }
   }, [preview]);
 
   // useEffect(() => {
@@ -185,13 +194,6 @@ const Row = ({
         );
 
       case "checkbox":
-        if (!cell.value) {
-          return;
-        }
-
-        if (row.original.isLock) {
-          return;
-        }
         return drawCheckBox();
 
       case "image":
@@ -238,30 +240,87 @@ const Row = ({
       return returnDate;
     }
 
-    returnDate = moment(date).format(timeFormat);
+    if (isBaronote) {
+      console.log("여기 안들어옴?");
+      returnDate = getBaronoteDayText(date);
+    } else {
+      returnDate = moment(date).format(timeFormat);
+    }
+
+    return returnDate;
+  };
+
+  const getBaronoteDayText = (date) => {
+    var returnDate = "";
+
+    if (!date) {
+      return returnDate;
+    }
+    if ("undefined" === date || "null" === date) {
+      return returnDate;
+    }
+
+    if ("now" === date) {
+      return "방금 전";
+    }
+
+    if (moment(date).isValid === false) {
+      return returnDate;
+    }
+
+    const today = moment(new Date());
+    const compareDay = moment(date);
+
+    const getDiffMinutes = today.diff(compareDay, "minutes");
+
+    if (1 > getDiffMinutes) {
+      returnDate = "방금 전";
+    } else if (1 <= getDiffMinutes && 60 > getDiffMinutes) {
+      returnDate = getDiffMinutes + "분 전";
+    } else if (60 <= getDiffMinutes && 1440 > getDiffMinutes) {
+      returnDate = parseInt(getDiffMinutes / 60) + "시간 전";
+    } else if (1440 <= getDiffMinutes && 4320 > getDiffMinutes) {
+      returnDate = parseInt(getDiffMinutes / 1440) + "일 전";
+    } else if (4320 <= getDiffMinutes) {
+      if (today.year() === compareDay.year()) {
+        returnDate = compareDay.format("MM월 DD일");
+      } else {
+        returnDate = compareDay.format("YYYY년 MM월 DD일");
+      }
+    }
 
     return returnDate;
   };
 
   const drawCheckBox = () => {
     return (
-      <div style={{ display: "inline-block" }}>
-        <input
-          className="checkbox"
-          style={{ width: "50px" }}
+      <StyledLabel htmlFor={row.id}>
+        <StyledCheckBox
+          className={
+            row.original.checked ? "checked" : !isMouseOverDiv && "hidden"
+          }
           type="checkbox"
           id={row.id}
+          checked={row.original.checked ? true : false}
           onChange={(e) => {
-            // e.stopPropagation();
-            if (e.target.checked) {
-              setCheckList([...checkList, row.id]);
-            } else {
-              setCheckList(checkList.filter((list) => list !== row.id));
+            if (setData) {
+              if (e.target.checked) {
+                setData((prev) =>
+                  prev.map((item) =>
+                    item === row.original ? { ...item, checked: true } : item
+                  )
+                );
+              } else {
+                setData((prev) =>
+                  prev.map((item) =>
+                    item === row.original ? { ...item, checked: false } : item
+                  )
+                );
+              }
             }
           }}
-          checked={checkList.includes(row.id) ? true : false}
         />
-      </div>
+      </StyledLabel>
     );
   };
 
@@ -283,7 +342,7 @@ const Row = ({
           ref={dragRef}
           style={{
             fontWeight: isMouseOverDiv ? "bold" : "",
-            background: isMouseOverDiv ? "#EFF1F7" : "none",
+            background: isMouseOverDiv ? "#F8F8F8" : "none",
             cursor: isMouseOverDiv ? "pointer" : "default",
             transition: "all 0.3s ease-out",
           }}
@@ -319,7 +378,6 @@ const Row = ({
                     boxSizing: "border-box",
                     height: `${rowHeight ? rowHeight : 50}px`,
                     lineHeight: `${rowHeight ? rowHeight : 50}px`,
-                    padding: "0.2rem",
                     opacity: `${
                       "checkbox" !== cell.column.type
                         ? row.original.readOnly
@@ -430,3 +488,34 @@ const Row = ({
 };
 
 export default Row;
+
+const StyledLabel = styled.label`
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+`;
+
+const StyledCheckBox = styled.input`
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 1px solid rgba(228, 228, 233, 1);
+  border-radius: 50%;
+
+  &:checked {
+    border-color: transparent;
+    background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M5.707 7.293a1 1 0 0 0-1.414 1.414l2 2a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0-1.414-1.414L7 8.586 5.707 7.293z'/%3e%3c/svg%3e");
+    background-size: 100% 100%;
+    background-position: 50%;
+    background-repeat: no-repeat;
+    background-color: limegreen;
+  }
+
+  &.hidden {
+    visibility: hidden;
+  }
+`;

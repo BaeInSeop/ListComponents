@@ -111,6 +111,7 @@ const Styles = styled.div`
 const Table = ({
   columns,
   data,
+  setData,
   rowHeight,
   linkProps,
   avatarProps,
@@ -123,6 +124,7 @@ const Table = ({
   onContextMenu,
   onBackward,
   useBackward,
+  isBaronote,
 }) => {
   // const [currentFolder, setCurrentFolder] = useState("home"); //현재 폴더
 
@@ -304,6 +306,8 @@ const Table = ({
             rows={rows}
             index={index}
             row={row}
+            data={data}
+            setData={setData}
             rowHeight={rowHeight}
             style={style}
             moveRow={moveRow}
@@ -324,6 +328,7 @@ const Table = ({
             onContextMenu={onContextMenu}
             onBackward={onBackward}
             calcColumnsWidth={calcColumnsWidth}
+            isBaronote={isBaronote}
             {...row.getRowProps()}
           />
         </div>
@@ -514,7 +519,7 @@ const Table = ({
           </div>
 
           {/* 드래그 시 UI */}
-          <Preview checkList={checkList} />
+          <Preview data={data} />
         </Styles>
       </DndProvider>
 

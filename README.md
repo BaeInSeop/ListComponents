@@ -59,23 +59,22 @@ return (
 
 ## `ListComponent - Props`
 
-| Key            | Required |     Type | Desc                              | Default                           |
-| -------------- | :------: | -------: | --------------------------------- | --------------------------------- |
-| columns        |    V     |    Array | Define Columns                    |                                   |
-| records        |    V     |    Array | Define Records                    |                                   |
-| rowHeight      |          |   Number | Resize Row Height                 | 50                                |
-| avatarProps    |          |   Object | Custom Avatar type Props          | size : 30, round : 50%            |
-| rowIconProps   |          |   Object | Custom Icon type Props            | size : 30, icons : react-icons/fa |
-| linkProps      |          |   Object | Custom Link type Props            | target : \_blank, text : value    |
-| imageProps     |          |   Object | Custom Thumbnail type Props       | target : \_blank, size : 30       |
-| timeFormat     |          |   String | Custom Time type Props            | YYYY-MM-DD HH:mm:ss               |
-| useBackward    |          |  Boolean | Display Backward                  | false                             |
-| onBackward     |          | Function | Callback when backward clicked    |                                   |
-| onMoveRecord   |          | Function | Callback when record moved        |                                   |
-| onClickRecord  |          | Function | Callback when record clicked      |                                   |
-| onContextMenu  |          | Function | Callback when mouse right clicked |                                   |
-| onFileDrop     |          | Function | Callback when local file dropped  |                                   |
-| onSelectedRows |          | Function | Callback when checkbox clicked    |                                   |
+| Key           | Required |     Type | Desc                              | Default                           |
+| ------------- | :------: | -------: | --------------------------------- | --------------------------------- |
+| columns       |    V     |    Array | Define Columns                    |                                   |
+| records       |    V     |    Array | Define Records                    |                                   |
+| rowHeight     |          |   Number | Resize Row Height                 | 50                                |
+| avatarProps   |          |   Object | Custom Avatar type Props          | size : 30, round : 50%            |
+| rowIconProps  |          |   Object | Custom Icon type Props            | size : 30, icons : react-icons/fa |
+| linkProps     |          |   Object | Custom Link type Props            | target : \_blank, text : value    |
+| imageProps    |          |   Object | Custom Thumbnail type Props       | target : \_blank, size : 30       |
+| timeFormat    |          |   String | Custom Time type Props            | YYYY-MM-DD HH:mm:ss               |
+| useBackward   |          |  Boolean | Display Backward                  | false                             |
+| onBackward    |          | Function | Callback when backward clicked    |                                   |
+| onMoveRecord  |          | Function | Callback when record moved        |                                   |
+| onClickRecord |          | Function | Callback when record clicked      |                                   |
+| onContextMenu |          | Function | Callback when mouse right clicked |                                   |
+| onFileDrop    |          | Function | Callback when local file dropped  |                                   |
 
 ## `Column - Props`
 
@@ -99,10 +98,10 @@ return (
 
 ## `Record - Other Props`
 
-| Key      | Type    | Desc                                  | Default |
-| -------- | ------- | ------------------------------------- | ------- |
-| isLock   | Boolean | Cannot Move Item and disable checkbox | false   |
-| readOnly | Boolean | Opacity 0.5                           | false   |
+| Key      | Required | Type    | Desc              | Default |
+| -------- | -------- | ------- | ----------------- | ------- |
+| checked  | V        | Boolean | IsCheck Row       | false   |
+| readOnly |          | Boolean | Css - Opacity 0.5 | false   |
 
 ## Example
 
@@ -146,7 +145,6 @@ const columns = React.useMemo(
 const records = React.useMemo(
   () => [
     {
-      checkbox: false,
       title: "Sample_1",
       modified: new Date(),
       extension: "folder",
@@ -154,22 +152,23 @@ const records = React.useMemo(
       link: "https://www.google.com",
       thumbnail:
         "https://cdn3.iconfinder.com/data/icons/feather-5/24/download-512.png",
+      checked: false,
     },
     {
-      checkbox: true,
       title: "Test_File",
       extension: "file",
       profile: "Test",
       link: "https://www.naver.com",
       thumbnail:
         "https://cdn4.iconfinder.com/data/icons/pop-scenes/1000/navigation___explore_space_exploration_astronaut_planets_planet-512.png",
+      checked: false,
     },
     {
-      checkbox: true,
       title: "Test_Pdf",
       modified: moment(),
       extension: "loading",
       readOnly: true,
+      checked: false,
     },
   ],
   []

@@ -12,6 +12,7 @@ import ReactLoading from "react-loading";
 function ListComponent({
   columns,
   records,
+  setRecords,
   rowHeight,
   linkProps,
   avatarProps,
@@ -20,11 +21,11 @@ function ListComponent({
   timeFormat,
   onMoveRecord,
   onClickRecord,
-  onSelectedRows,
   onFileDrop,
   onContextMenu,
   onBackward,
   useBackward,
+  isBaronote,
 }) {
   // const columns = React.useMemo(
   //   () => [
@@ -67,45 +68,34 @@ function ListComponent({
   //   {
   //     pk: 1000,
   //     parentKey: 0,
-  //     checkbox: true,
   //     title:
   //       "Sample_1rSample_1rSample_1rSample_1rSample_1rSample_1rSample_1rSample_1rSample_1rSample_1rSample_1rSample_1r",
-  //     modified: "2010-10-17",
+  //     modified: "2022-11-10 11:00:00",
   //     extension: "folder",
   //     profile: "Sample",
   //     isFolder: true,
   //     link: "https://www.googlegooglegooglegooglegoogle.com",
   //     thumbnail:
   //       "https://cdn3.iconfinder.com/data/icons/feather-5/24/download-512.png",
-  //     isLock: false,
+  //     checked: false,
   //   },
   //   {
-  //     checkbox: true,
   //     title: "Test_File",
   //     extension: "file",
   //     profile: "Test",
   //     link: "https://www.naver.com",
   //     thumbnail:
   //       "https://cdn4.iconfinder.com/data/icons/pop-scenes/1000/navigation___explore_space_exploration_astronaut_planets_planet-512.png",
+  //     checked: false,
   //   },
   //   {
-  //     checkbox: true,
   //     title: "Test_Pdf",
   //     modified: "2010-10-17",
   //     extension: "pdf",
   //     readOnly: true,
+  //     checked: false,
   //   },
   // ]);
-
-  // const [columns, setColumns] = useState(
-  //   header.map((item) =>
-  //     item.accessor
-  //       ? { ...item }
-  //       : { ...item, accessor: item.header.toLowerCase() }
-  //   )
-  // );
-
-  // const [data, setData] = useState(items);
 
   const rowLinkProps = {
     target: linkProps
@@ -168,6 +158,7 @@ function ListComponent({
       <Table
         columns={columns ? columns : []}
         data={records ? records : []}
+        setData={setRecords ? setRecords : null}
         rowHeight={rowHeight ? rowHeight : 50}
         linkProps={rowLinkProps}
         avatarProps={rowAvatarProps}
@@ -177,14 +168,16 @@ function ListComponent({
         onMoveRecord={
           onMoveRecord
             ? onMoveRecord
-            : (dragIndex, hoverIndex, movedItem, droppedRow) => {}
+            : (dragIndex, hoverIndex, movedItem, droppedRow) => {
+                console.log(dragIndex, hoverIndex, movedItem, droppedRow);
+              }
         }
         onClickRecord={onClickRecord ? onClickRecord : (item) => {}}
         onContextMenu={onContextMenu ? onContextMenu : (row, event) => {}}
         onFileDrop={onFileDrop ? onFileDrop : (droppedFile) => {}}
-        onSelectedRows={onSelectedRows ? onSelectedRows : (rows) => {}}
         onBackward={onBackward ? onBackward : () => {}}
         useBackward={useBackward ? useBackward : false}
+        isBaronote={isBaronote ? isBaronote : false}
       />
     </>
   );

@@ -18,6 +18,7 @@ function ListComponent({
   avatarProps,
   iconProps,
   imageProps,
+  timeProps,
   timeFormat,
   onMoveRecord,
   onClickRecord,
@@ -25,7 +26,7 @@ function ListComponent({
   onContextMenu,
   onBackward,
   useBackward,
-  isBaronote,
+  useMoveRecord,
 }) {
   // const columns = React.useMemo(
   //   () => [
@@ -151,7 +152,10 @@ function ListComponent({
     size: imageProps ? (imageProps.size ? imageProps.size : 30) : 30,
   };
 
-  const rowTimeFormat = timeFormat ? timeFormat : "YYYY-MM-DD HH:mm:ss";
+  const rowTimeProps = {
+    lang: timeProps ? timeProps.lang && timeProps.lang : "ko",
+    format: timeProps ? timeProps.format && timeProps.format : "",
+  };
 
   return (
     <>
@@ -164,20 +168,18 @@ function ListComponent({
         avatarProps={rowAvatarProps}
         imageProps={rowImageProps}
         iconProps={rowIconProps}
-        timeFormat={rowTimeFormat}
+        timeProps={rowTimeProps}
         onMoveRecord={
           onMoveRecord
             ? onMoveRecord
-            : (dragIndex, hoverIndex, movedItem, droppedRow) => {
-                console.log(dragIndex, hoverIndex, movedItem, droppedRow);
-              }
+            : (dragIndex, hoverIndex, movedItem, droppedRow) => {}
         }
         onClickRecord={onClickRecord ? onClickRecord : (item) => {}}
         onContextMenu={onContextMenu ? onContextMenu : (row, event) => {}}
         onFileDrop={onFileDrop ? onFileDrop : (droppedFile) => {}}
         onBackward={onBackward ? onBackward : () => {}}
-        useBackward={useBackward ? useBackward : false}
-        isBaronote={isBaronote ? isBaronote : false}
+        useBackward={undefined !== useBackward ? useBackward : false}
+        useMoveRecord={undefined !== useMoveRecord ? useMoveRecord : true}
       />
     </>
   );

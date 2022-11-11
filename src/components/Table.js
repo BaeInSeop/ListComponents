@@ -116,15 +116,14 @@ const Table = ({
   linkProps,
   avatarProps,
   iconProps,
-  timeFormat,
+  timeProps,
   onMoveRecord,
   onClickRecord,
   onFileDrop,
-  onSelectedRows,
   onContextMenu,
   onBackward,
   useBackward,
-  isBaronote,
+  useMoveRecord,
 }) => {
   // const [currentFolder, setCurrentFolder] = useState("home"); //현재 폴더
 
@@ -169,10 +168,6 @@ const Table = ({
       setIsOpenDetailModal(true);
     }
   }, [modalData]);
-
-  useEffect(() => {
-    onSelectedRows(checkList);
-  }, [checkList]);
 
   const {
     getTableProps,
@@ -315,11 +310,10 @@ const Table = ({
             setCheckList={setCheckList}
             prepareRow={prepareRow}
             setModalData={setModalData}
-            // setData={setData}
             linkProps={linkProps}
             avatarProps={avatarProps}
             iconProps={iconProps}
-            timeFormat={timeFormat}
+            timeProps={timeProps}
             // setCurrentFolder={setCurrentFolder}
             // resizeWidth={resizeWidth}
             // onUpdateItem={onUpdateItem}
@@ -327,8 +321,8 @@ const Table = ({
             onClickRecord={onClickRecord}
             onContextMenu={onContextMenu}
             onBackward={onBackward}
+            useMoveRecord={useMoveRecord}
             calcColumnsWidth={calcColumnsWidth}
-            isBaronote={isBaronote}
             {...row.getRowProps()}
           />
         </div>

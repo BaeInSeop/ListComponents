@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import moment from "moment";
+
 import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { getEmptyImage } from "react-dnd-html5-backend";
 import axios from "axios";
@@ -22,8 +23,6 @@ const Row = ({
   rowHeight,
   style,
   prepareRow,
-  checkList,
-  setCheckList,
   setModalData,
   // setCurrentFolder,
   // resizeWidth,
@@ -34,9 +33,9 @@ const Row = ({
   linkProps,
   avatarProps,
   iconProps,
-  timeFormat,
+  timeProps,
   calcColumnsWidth,
-  isBaronote,
+  useMoveRecord,
 }) => {
   const dropRef = useRef(null);
   const dragRef = useRef(null);
@@ -140,6 +139,12 @@ const Row = ({
   drag(drop(dragRef));
 
   useEffect(() => {
+    if (timeProps.lang) {
+      moment().locale(timeProps.lang.toLowerCase());
+    }
+  }, []);
+
+  useEffect(() => {
     if (1 < data.filter((item) => item.checked).length) {
       preview(getEmptyImage(), { captureDraggingState: true });
     }
@@ -219,6 +224,7 @@ const Row = ({
               whiteSpace: "nowrap",
               boxSizing: "border-box",
             }}
+            title={cell.value}
           >
             {cell.render("Cell")}
           </div>
@@ -240,53 +246,14 @@ const Row = ({
       return returnDate;
     }
 
-    if (isBaronote) {
-      console.log("여기 안들어옴?");
-      returnDate = getBaronoteDayText(date);
+    if ("" !== timeProps.format) {
+      returnDate = moment(date)
+        .locale(timeProps.lang ? timeProps.lang : "ko")
+        .format(timeProps.format);
     } else {
-      returnDate = moment(date).format(timeFormat);
-    }
-
-    return returnDate;
-  };
-
-  const getBaronoteDayText = (date) => {
-    var returnDate = "";
-
-    if (!date) {
-      return returnDate;
-    }
-    if ("undefined" === date || "null" === date) {
-      return returnDate;
-    }
-
-    if ("now" === date) {
-      return "방금 전";
-    }
-
-    if (moment(date).isValid === false) {
-      return returnDate;
-    }
-
-    const today = moment(new Date());
-    const compareDay = moment(date);
-
-    const getDiffMinutes = today.diff(compareDay, "minutes");
-
-    if (1 > getDiffMinutes) {
-      returnDate = "방금 전";
-    } else if (1 <= getDiffMinutes && 60 > getDiffMinutes) {
-      returnDate = getDiffMinutes + "분 전";
-    } else if (60 <= getDiffMinutes && 1440 > getDiffMinutes) {
-      returnDate = parseInt(getDiffMinutes / 60) + "시간 전";
-    } else if (1440 <= getDiffMinutes && 4320 > getDiffMinutes) {
-      returnDate = parseInt(getDiffMinutes / 1440) + "일 전";
-    } else if (4320 <= getDiffMinutes) {
-      if (today.year() === compareDay.year()) {
-        returnDate = compareDay.format("MM월 DD일");
-      } else {
-        returnDate = compareDay.format("YYYY년 MM월 DD일");
-      }
+      returnDate = moment(date)
+        .locale(timeProps.lang ? timeProps.lang : "ko")
+        .fromNow();
     }
 
     return returnDate;
@@ -305,17 +272,20 @@ const Row = ({
           onChange={(e) => {
             if (setData) {
               if (e.target.checked) {
-                setData((prev) =>
-                  prev.map((item) =>
-                    item === row.original ? { ...item, checked: true } : item
-                  )
+                let tempData = data.map((item) =>
+                  Number(item.id) === Number(row.original.id)
+                    ? { ...item, checked: true }
+                    : item
                 );
+                setData(tempData);
               } else {
-                setData((prev) =>
-                  prev.map((item) =>
-                    item === row.original ? { ...item, checked: false } : item
-                  )
+                let tempData = data.map((item) =>
+                  Number(item.id) === Number(row.original.id)
+                    ? { ...item, checked: false }
+                    : item
                 );
+
+                setData(tempData);
               }
             }
           }}
@@ -339,7 +309,7 @@ const Row = ({
         className="tr"
       >
         <div
-          ref={dragRef}
+          ref={useMoveRecord ? dragRef : null}
           style={{
             fontWeight: isMouseOverDiv ? "bold" : "",
             background: isMouseOverDiv ? "#F8F8F8" : "none",

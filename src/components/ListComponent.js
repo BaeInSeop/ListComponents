@@ -93,7 +93,7 @@ function ListComponent({
         columns={columns ? columns : []}
         data={records ? records : []}
         setData={setRecords ? setRecords : null}
-        rowHeight={rowHeight ? rowHeight : 70}
+        rowHeight={rowHeight ? rowHeight : 50}
         linkProps={rowLinkProps}
         avatarProps={rowAvatarProps}
         imageProps={rowImageProps}

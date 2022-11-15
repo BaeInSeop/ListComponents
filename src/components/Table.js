@@ -498,34 +498,42 @@ const Table = ({
                       )}
                     </AutoSizer>
                   ) : (
-                    rows.map(
-                      (row, index) =>
-                        prepareRow(row) || (
-                          <Row
-                            rows={rows}
-                            index={index}
-                            row={row}
-                            data={data}
-                            setData={setData}
-                            rowHeight={rowHeight}
-                            moveRow={moveRow}
-                            checkList={checkList}
-                            setCheckList={setCheckList}
-                            prepareRow={prepareRow}
-                            setModalData={setModalData}
-                            linkProps={linkProps}
-                            avatarProps={avatarProps}
-                            iconProps={iconProps}
-                            timeProps={timeProps}
-                            onClickRecord={onClickRecord}
-                            onContextMenu={onContextMenu}
-                            onBackward={onBackward}
-                            useMoveRecord={useMoveRecord}
-                            calcColumnsWidth={calcColumnsWidth}
-                            {...row.getRowProps()}
-                          />
-                        )
-                    )
+                    <div
+                      style={{
+                        overflow: "auto",
+                        height: "100%",
+                        boxSizing: "border-box",
+                      }}
+                    >
+                      {rows.map(
+                        (row, index) =>
+                          prepareRow(row) || (
+                            <Row
+                              rows={rows}
+                              index={index}
+                              row={row}
+                              data={data}
+                              setData={setData}
+                              rowHeight={rowHeight}
+                              moveRow={moveRow}
+                              checkList={checkList}
+                              setCheckList={setCheckList}
+                              prepareRow={prepareRow}
+                              setModalData={setModalData}
+                              linkProps={linkProps}
+                              avatarProps={avatarProps}
+                              iconProps={iconProps}
+                              timeProps={timeProps}
+                              onClickRecord={onClickRecord}
+                              onContextMenu={onContextMenu}
+                              onBackward={onBackward}
+                              useMoveRecord={useMoveRecord}
+                              calcColumnsWidth={calcColumnsWidth}
+                              {...row.getRowProps()}
+                            />
+                          )
+                      )}
+                    </div>
                   )
                 ) : (
                   <div

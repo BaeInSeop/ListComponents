@@ -344,7 +344,7 @@ const Row = ({
                   style={{
                     ...cell.getCellProps().style,
                     verticalAlign: "middle",
-                    minHeight: "50px",
+                    minHeight: rowHeight,
                     boxSizing: "border-box",
                     height: `${rowHeight ? rowHeight : 50}px`,
                     lineHeight: `${rowHeight ? rowHeight : 50}px`,
@@ -356,7 +356,9 @@ const Row = ({
                         : 1
                     }`,
                   }}
-                  className="td"
+                  className={
+                    cell.column.className ? `td ${cell.column.className}` : `td`
+                  }
                   onClick={() =>
                     "checkbox" !== cell.column.type
                       ? clickItem(row.original)

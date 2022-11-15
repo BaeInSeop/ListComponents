@@ -19,7 +19,6 @@ function ListComponent({
   iconProps,
   imageProps,
   timeProps,
-  timeFormat,
   onMoveRecord,
   onClickRecord,
   onFileDrop,
@@ -27,77 +26,8 @@ function ListComponent({
   onBackward,
   useBackward,
   useMoveRecord,
+  useVirtualized,
 }) {
-  // const columns = React.useMemo(
-  //   () => [
-  //     {
-  //       accessor: "checkbox",
-  //       type: "checkbox",
-  //       width: 50,
-  //     },
-  //     {
-  //       accessor: "title",
-  //       type: "text",
-  //     },
-  //     {
-  //       accessor: "modified",
-  //       type: "time",
-  //     },
-  //     {
-  //       accessor: "extension",
-  //       type: "icon",
-  //       width: 50,
-  //     },
-  //     {
-  //       accessor: "profile",
-  //       type: "avatar",
-  //       width: 70,
-  //     },
-  //     {
-  //       accessor: "link",
-  //       type: "link",
-  //     },
-  //     {
-  //       accessor: "thumbnail",
-  //       type: "image",
-  //     },
-  //   ],
-  //   []
-  // );
-
-  // const [records, setRecords] = useState([
-  //   {
-  //     pk: 1000,
-  //     parentKey: 0,
-  //     title:
-  //       "Sample_1rSample_1rSample_1rSample_1rSample_1rSample_1rSample_1rSample_1rSample_1rSample_1rSample_1rSample_1r",
-  //     modified: "2022-11-10 11:00:00",
-  //     extension: "folder",
-  //     profile: "Sample",
-  //     isFolder: true,
-  //     link: "https://www.googlegooglegooglegooglegoogle.com",
-  //     thumbnail:
-  //       "https://cdn3.iconfinder.com/data/icons/feather-5/24/download-512.png",
-  //     checked: false,
-  //   },
-  //   {
-  //     title: "Test_File",
-  //     extension: "file",
-  //     profile: "Test",
-  //     link: "https://www.naver.com",
-  //     thumbnail:
-  //       "https://cdn4.iconfinder.com/data/icons/pop-scenes/1000/navigation___explore_space_exploration_astronaut_planets_planet-512.png",
-  //     checked: false,
-  //   },
-  //   {
-  //     title: "Test_Pdf",
-  //     modified: "2010-10-17",
-  //     extension: "pdf",
-  //     readOnly: true,
-  //     checked: false,
-  //   },
-  // ]);
-
   const rowLinkProps = {
     target: linkProps
       ? linkProps.target
@@ -163,7 +93,7 @@ function ListComponent({
         columns={columns ? columns : []}
         data={records ? records : []}
         setData={setRecords ? setRecords : null}
-        rowHeight={rowHeight ? rowHeight : 50}
+        rowHeight={rowHeight ? rowHeight : 70}
         linkProps={rowLinkProps}
         avatarProps={rowAvatarProps}
         imageProps={rowImageProps}
@@ -180,6 +110,7 @@ function ListComponent({
         onBackward={onBackward ? onBackward : () => {}}
         useBackward={undefined !== useBackward ? useBackward : false}
         useMoveRecord={undefined !== useMoveRecord ? useMoveRecord : true}
+        useVirtualized={undefined !== useVirtualized ? useVirtualized : false}
       />
     </>
   );

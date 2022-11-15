@@ -78,11 +78,12 @@ return (
 
 ## `Column - Props`
 
-| Key      | Required |   Type | Desc                  | Vaild Values                                    |
-| -------- | :------: | -----: | --------------------- | ----------------------------------------------- |
-| accessor |    V     | String | Access to Record Key  |                                                 |
-| type     |          | String | Resizing border width | text, time, icon, avatar, link, checkbox, image |
-| width    |          | Number | Define Column Width   | 50, 120, 300 etc ...                            |
+| Key       | Required |   Type | Desc                       | Vaild Values                                    |
+| --------- | :------: | -----: | -------------------------- | ----------------------------------------------- |
+| accessor  |    V     | String | Access to Record Key       |                                                 |
+| className |          | String | Define className for style |                                                 |
+| type      |          | String | Resizing border width      | text, time, icon, avatar, link, checkbox, image |
+| width     |          | Number | Define Column Width        | 50, 120, 300 etc ...                            |
 
 ## `Record - Value by Type`
 

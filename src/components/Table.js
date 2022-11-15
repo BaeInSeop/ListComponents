@@ -10,6 +10,7 @@ import {
 
 import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 import moment from "moment";
+import { RiArrowGoBackFill } from "react-icons/ri";
 
 import AutoSizer from "react-virtualized-auto-sizer";
 import { FileDrop } from "react-file-drop";
@@ -124,6 +125,7 @@ const Table = ({
   onBackward,
   useBackward,
   useMoveRecord,
+  useVirtualized,
 }) => {
   // const [currentFolder, setCurrentFolder] = useState("home"); //현재 폴더
 
@@ -468,30 +470,67 @@ const Table = ({
                       // lineHeight: `${rowHeight ? rowHeight : 50}px`,
                       cursor: "pointer",
                       background: isMouseOverBackward ? "#EFF1F7" : "none",
+                      gap: "10px",
                     }}
                     onClick={() => onBackward()}
                     onMouseEnter={() => setIsMouseOverBackward(true)}
                     onMouseLeave={() => setIsMouseOverBackward(false)}
                   >
-                    Move to parent folder
+                    <RiArrowGoBackFill />
+                    <span>Move to parent folder</span>
                   </div>
                 )}
 
                 {0 < rows.length ? (
-                  <AutoSizer>
-                    {({ height, width }) => (
-                      <div>
-                        <FixedSizeList
-                          height={height}
-                          itemCount={rows.length}
-                          itemSize={rowHeight}
-                          width={width}
-                        >
-                          {RenderRow}
-                        </FixedSizeList>
-                      </div>
-                    )}
-                  </AutoSizer>
+                  useVirtualized ? (
+                    <AutoSizer>
+                      {({ height, width }) => (
+                        <div>
+                          <FixedSizeList
+                            height={height}
+                            itemCount={rows.length}
+                            itemSize={rowHeight}
+                            width={width}
+                          >
+                            {RenderRow}
+                          </FixedSizeList>
+                        </div>
+                      )}
+                    </AutoSizer>
+                  ) : (
+                    rows.map(
+                      (row, index) =>
+                        prepareRow(row) || (
+                          <Row
+                            rows={rows}
+                            index={index}
+                            row={row}
+                            data={data}
+                            setData={setData}
+                            rowHeight={rowHeight}
+                            moveRow={moveRow}
+                            checkList={checkList}
+                            setCheckList={setCheckList}
+                            prepareRow={prepareRow}
+                            setModalData={setModalData}
+                            linkProps={linkProps}
+                            avatarProps={avatarProps}
+                            iconProps={iconProps}
+                            timeProps={timeProps}
+                            // setCurrentFolder={setCurrentFolder}
+                            // resizeWidth={resizeWidth}
+                            // onUpdateItem={onUpdateItem}
+                            // onDeleteItem={onDeleteItem}
+                            onClickRecord={onClickRecord}
+                            onContextMenu={onContextMenu}
+                            onBackward={onBackward}
+                            useMoveRecord={useMoveRecord}
+                            calcColumnsWidth={calcColumnsWidth}
+                            {...row.getRowProps()}
+                          />
+                        )
+                    )
+                  )
                 ) : (
                   <div
                     className="td"

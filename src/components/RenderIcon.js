@@ -16,11 +16,14 @@ const RenderIcon = ({ type, cursor, size, iconProps }) => {
     return iconProps.icons[type];
   } else {
     return (
-      <img
-        src={iconProps.icons[type]}
-        width={`${iconProps.size}px`}
-        height={`${iconProps.size}px`}
-      />
+      <div style={{ fontSize: 0, width: "100%", height: "100%" }}>
+        <img
+          style={{ verticalAlign: "middle", display: "inline-block" }}
+          src={iconProps.icons[type]}
+          width={`${iconProps.size}px`}
+          height={`${iconProps.size}px`}
+        />
+      </div>
     );
   }
 };

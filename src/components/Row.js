@@ -206,9 +206,11 @@ const Row = ({
           return;
         }
         return (
-          <a href={cell.value} target="_blank">
-            <img src={cell.value} width="30px" height="30px" />{" "}
-          </a>
+          <div style={{ fontSize: 0 }}>
+            <a href={cell.value} target="_blank">
+              <img src={cell.value} width="30px" height="30px" />{" "}
+            </a>
+          </div>
         );
 
       case "text":

@@ -57,3 +57,25 @@
   color: #ff6e40;
   box-shadow: 0 0 13px 3px #ff6e40;
 }
+
+.file-drop > .file-drop-target div div:nth-of-type(2) > div > div {
+  overflow-y: auto;
+}
+.file-drop
+  > .file-drop-target
+  div
+  div:nth-of-type(2)
+  > div
+  > div::-webkit-scrollbar {
+  width: 6px;
+}
+.file-drop
+  > .file-drop-target
+  div
+  div:nth-of-type(2)
+  > div
+  > div::-webkit-scrollbar-thumb {
+  /* 스크롤바의 길이 */
+  background: #d9d9d9;
+  border-radius: 5px;
+}

@@ -46,10 +46,665 @@ const Main = () => {
   const [records, setRecords] = useState([
     {
       icon: "folder",
-      name: {
-        title: "타이틀타이틀타이틀타이틀타이틀타이틀",
-        desc: "부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목",
-      },
+      name: "부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목",
+      modified: moment(),
+      avatar: "테스트",
+      link: "http://www.navernavernavernavernavernavernavernaver.com",
+      image:
+        "https://cdn3.iconfinder.com/data/icons/feather-5/24/download-512.png",
+    },
+    {
+      icon: "file",
+      name: "테스트 파일",
+      modified: moment(),
+    },
+    {
+      icon: "folder",
+      name: "부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목",
+      modified: moment(),
+      avatar: "테스트",
+      link: "http://www.navernavernavernavernavernavernavernaver.com",
+      image:
+        "https://cdn3.iconfinder.com/data/icons/feather-5/24/download-512.png",
+    },
+    {
+      icon: "file",
+      name: "테스트 파일",
+      modified: moment(),
+    },
+    {
+      icon: "folder",
+      name: "부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목",
+      modified: moment(),
+      avatar: "테스트",
+      link: "http://www.navernavernavernavernavernavernavernaver.com",
+      image:
+        "https://cdn3.iconfinder.com/data/icons/feather-5/24/download-512.png",
+    },
+    {
+      icon: "file",
+      name: "테스트 파일",
+      modified: moment(),
+    },
+    {
+      icon: "folder",
+      name: "부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목",
+      modified: moment(),
+      avatar: "테스트",
+      link: "http://www.navernavernavernavernavernavernavernaver.com",
+      image:
+        "https://cdn3.iconfinder.com/data/icons/feather-5/24/download-512.png",
+    },
+    {
+      icon: "file",
+      name: "테스트 파일",
+      modified: moment(),
+    },
+    {
+      icon: "folder",
+      name: "부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목",
+      modified: moment(),
+      avatar: "테스트",
+      link: "http://www.navernavernavernavernavernavernavernaver.com",
+      image:
+        "https://cdn3.iconfinder.com/data/icons/feather-5/24/download-512.png",
+    },
+    {
+      icon: "file",
+      name: "테스트 파일",
+      modified: moment(),
+    },
+    {
+      icon: "folder",
+      name: "부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목",
+      modified: moment(),
+      avatar: "테스트",
+      link: "http://www.navernavernavernavernavernavernavernaver.com",
+      image:
+        "https://cdn3.iconfinder.com/data/icons/feather-5/24/download-512.png",
+    },
+    {
+      icon: "file",
+      name: "테스트 파일",
+      modified: moment(),
+    },
+    {
+      icon: "folder",
+      name: "부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목",
+      modified: moment(),
+      avatar: "테스트",
+      link: "http://www.navernavernavernavernavernavernavernaver.com",
+      image:
+        "https://cdn3.iconfinder.com/data/icons/feather-5/24/download-512.png",
+    },
+    {
+      icon: "file",
+      name: "테스트 파일",
+      modified: moment(),
+    },
+    {
+      icon: "folder",
+      name: "부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목",
+      modified: moment(),
+      avatar: "테스트",
+      link: "http://www.navernavernavernavernavernavernavernaver.com",
+      image:
+        "https://cdn3.iconfinder.com/data/icons/feather-5/24/download-512.png",
+    },
+    {
+      icon: "file",
+      name: "테스트 파일",
+      modified: moment(),
+    },
+    {
+      icon: "folder",
+      name: "부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목",
+      modified: moment(),
+      avatar: "테스트",
+      link: "http://www.navernavernavernavernavernavernavernaver.com",
+      image:
+        "https://cdn3.iconfinder.com/data/icons/feather-5/24/download-512.png",
+    },
+    {
+      icon: "file",
+      name: "테스트 파일",
+      modified: moment(),
+    },
+    {
+      icon: "folder",
+      name: "부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목",
+      modified: moment(),
+      avatar: "테스트",
+      link: "http://www.navernavernavernavernavernavernavernaver.com",
+      image:
+        "https://cdn3.iconfinder.com/data/icons/feather-5/24/download-512.png",
+    },
+    {
+      icon: "file",
+      name: "테스트 파일",
+      modified: moment(),
+    },
+    {
+      icon: "folder",
+      name: "부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목",
+      modified: moment(),
+      avatar: "테스트",
+      link: "http://www.navernavernavernavernavernavernavernaver.com",
+      image:
+        "https://cdn3.iconfinder.com/data/icons/feather-5/24/download-512.png",
+    },
+    {
+      icon: "file",
+      name: "테스트 파일",
+      modified: moment(),
+    },
+    {
+      icon: "folder",
+      name: "부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목",
+      modified: moment(),
+      avatar: "테스트",
+      link: "http://www.navernavernavernavernavernavernavernaver.com",
+      image:
+        "https://cdn3.iconfinder.com/data/icons/feather-5/24/download-512.png",
+    },
+    {
+      icon: "file",
+      name: "테스트 파일",
+      modified: moment(),
+    },
+    {
+      icon: "folder",
+      name: "부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목",
+      modified: moment(),
+      avatar: "테스트",
+      link: "http://www.navernavernavernavernavernavernavernaver.com",
+      image:
+        "https://cdn3.iconfinder.com/data/icons/feather-5/24/download-512.png",
+    },
+    {
+      icon: "file",
+      name: "테스트 파일",
+      modified: moment(),
+    },
+    {
+      icon: "folder",
+      name: "부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목",
+      modified: moment(),
+      avatar: "테스트",
+      link: "http://www.navernavernavernavernavernavernavernaver.com",
+      image:
+        "https://cdn3.iconfinder.com/data/icons/feather-5/24/download-512.png",
+    },
+    {
+      icon: "file",
+      name: "테스트 파일",
+      modified: moment(),
+    },
+    {
+      icon: "folder",
+      name: "부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목",
+      modified: moment(),
+      avatar: "테스트",
+      link: "http://www.navernavernavernavernavernavernavernaver.com",
+      image:
+        "https://cdn3.iconfinder.com/data/icons/feather-5/24/download-512.png",
+    },
+    {
+      icon: "file",
+      name: "테스트 파일",
+      modified: moment(),
+    },
+    {
+      icon: "folder",
+      name: "부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목",
+      modified: moment(),
+      avatar: "테스트",
+      link: "http://www.navernavernavernavernavernavernavernaver.com",
+      image:
+        "https://cdn3.iconfinder.com/data/icons/feather-5/24/download-512.png",
+    },
+    {
+      icon: "file",
+      name: "테스트 파일",
+      modified: moment(),
+    },
+    {
+      icon: "folder",
+      name: "부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목",
+      modified: moment(),
+      avatar: "테스트",
+      link: "http://www.navernavernavernavernavernavernavernaver.com",
+      image:
+        "https://cdn3.iconfinder.com/data/icons/feather-5/24/download-512.png",
+    },
+    {
+      icon: "file",
+      name: "테스트 파일",
+      modified: moment(),
+    },
+    {
+      icon: "folder",
+      name: "부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목",
+      modified: moment(),
+      avatar: "테스트",
+      link: "http://www.navernavernavernavernavernavernavernaver.com",
+      image:
+        "https://cdn3.iconfinder.com/data/icons/feather-5/24/download-512.png",
+    },
+    {
+      icon: "file",
+      name: "테스트 파일",
+      modified: moment(),
+    },
+    {
+      icon: "folder",
+      name: "부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목",
+      modified: moment(),
+      avatar: "테스트",
+      link: "http://www.navernavernavernavernavernavernavernaver.com",
+      image:
+        "https://cdn3.iconfinder.com/data/icons/feather-5/24/download-512.png",
+    },
+    {
+      icon: "file",
+      name: "테스트 파일",
+      modified: moment(),
+    },
+    {
+      icon: "folder",
+      name: "부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목",
+      modified: moment(),
+      avatar: "테스트",
+      link: "http://www.navernavernavernavernavernavernavernaver.com",
+      image:
+        "https://cdn3.iconfinder.com/data/icons/feather-5/24/download-512.png",
+    },
+    {
+      icon: "file",
+      name: "테스트 파일",
+      modified: moment(),
+    },
+    {
+      icon: "folder",
+      name: "부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목",
+      modified: moment(),
+      avatar: "테스트",
+      link: "http://www.navernavernavernavernavernavernavernaver.com",
+      image:
+        "https://cdn3.iconfinder.com/data/icons/feather-5/24/download-512.png",
+    },
+    {
+      icon: "file",
+      name: "테스트 파일",
+      modified: moment(),
+    },
+    {
+      icon: "folder",
+      name: "부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목",
+      modified: moment(),
+      avatar: "테스트",
+      link: "http://www.navernavernavernavernavernavernavernaver.com",
+      image:
+        "https://cdn3.iconfinder.com/data/icons/feather-5/24/download-512.png",
+    },
+    {
+      icon: "file",
+      name: "테스트 파일",
+      modified: moment(),
+    },
+    {
+      icon: "folder",
+      name: "부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목",
+      modified: moment(),
+      avatar: "테스트",
+      link: "http://www.navernavernavernavernavernavernavernaver.com",
+      image:
+        "https://cdn3.iconfinder.com/data/icons/feather-5/24/download-512.png",
+    },
+    {
+      icon: "file",
+      name: "테스트 파일",
+      modified: moment(),
+    },
+    {
+      icon: "folder",
+      name: "부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목",
+      modified: moment(),
+      avatar: "테스트",
+      link: "http://www.navernavernavernavernavernavernavernaver.com",
+      image:
+        "https://cdn3.iconfinder.com/data/icons/feather-5/24/download-512.png",
+    },
+    {
+      icon: "file",
+      name: "테스트 파일",
+      modified: moment(),
+    },
+    {
+      icon: "folder",
+      name: "부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목",
+      modified: moment(),
+      avatar: "테스트",
+      link: "http://www.navernavernavernavernavernavernavernaver.com",
+      image:
+        "https://cdn3.iconfinder.com/data/icons/feather-5/24/download-512.png",
+    },
+    {
+      icon: "file",
+      name: "테스트 파일",
+      modified: moment(),
+    },
+    {
+      icon: "folder",
+      name: "부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목",
+      modified: moment(),
+      avatar: "테스트",
+      link: "http://www.navernavernavernavernavernavernavernaver.com",
+      image:
+        "https://cdn3.iconfinder.com/data/icons/feather-5/24/download-512.png",
+    },
+    {
+      icon: "file",
+      name: "테스트 파일",
+      modified: moment(),
+    },
+    {
+      icon: "folder",
+      name: "부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목",
+      modified: moment(),
+      avatar: "테스트",
+      link: "http://www.navernavernavernavernavernavernavernaver.com",
+      image:
+        "https://cdn3.iconfinder.com/data/icons/feather-5/24/download-512.png",
+    },
+    {
+      icon: "file",
+      name: "테스트 파일",
+      modified: moment(),
+    },
+    {
+      icon: "folder",
+      name: "부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목",
+      modified: moment(),
+      avatar: "테스트",
+      link: "http://www.navernavernavernavernavernavernavernaver.com",
+      image:
+        "https://cdn3.iconfinder.com/data/icons/feather-5/24/download-512.png",
+    },
+    {
+      icon: "file",
+      name: "테스트 파일",
+      modified: moment(),
+    },
+    {
+      icon: "folder",
+      name: "부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목",
+      modified: moment(),
+      avatar: "테스트",
+      link: "http://www.navernavernavernavernavernavernavernaver.com",
+      image:
+        "https://cdn3.iconfinder.com/data/icons/feather-5/24/download-512.png",
+    },
+    {
+      icon: "file",
+      name: "테스트 파일",
+      modified: moment(),
+    },
+    {
+      icon: "folder",
+      name: "부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목",
+      modified: moment(),
+      avatar: "테스트",
+      link: "http://www.navernavernavernavernavernavernavernaver.com",
+      image:
+        "https://cdn3.iconfinder.com/data/icons/feather-5/24/download-512.png",
+    },
+    {
+      icon: "file",
+      name: "테스트 파일",
+      modified: moment(),
+    },
+    {
+      icon: "folder",
+      name: "부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목",
+      modified: moment(),
+      avatar: "테스트",
+      link: "http://www.navernavernavernavernavernavernavernaver.com",
+      image:
+        "https://cdn3.iconfinder.com/data/icons/feather-5/24/download-512.png",
+    },
+    {
+      icon: "file",
+      name: "테스트 파일",
+      modified: moment(),
+    },
+    {
+      icon: "folder",
+      name: "부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목",
+      modified: moment(),
+      avatar: "테스트",
+      link: "http://www.navernavernavernavernavernavernavernaver.com",
+      image:
+        "https://cdn3.iconfinder.com/data/icons/feather-5/24/download-512.png",
+    },
+    {
+      icon: "file",
+      name: "테스트 파일",
+      modified: moment(),
+    },
+    {
+      icon: "folder",
+      name: "부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목",
+      modified: moment(),
+      avatar: "테스트",
+      link: "http://www.navernavernavernavernavernavernavernaver.com",
+      image:
+        "https://cdn3.iconfinder.com/data/icons/feather-5/24/download-512.png",
+    },
+    {
+      icon: "file",
+      name: "테스트 파일",
+      modified: moment(),
+    },
+    {
+      icon: "folder",
+      name: "부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목",
+      modified: moment(),
+      avatar: "테스트",
+      link: "http://www.navernavernavernavernavernavernavernaver.com",
+      image:
+        "https://cdn3.iconfinder.com/data/icons/feather-5/24/download-512.png",
+    },
+    {
+      icon: "file",
+      name: "테스트 파일",
+      modified: moment(),
+    },
+    {
+      icon: "folder",
+      name: "부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목",
+      modified: moment(),
+      avatar: "테스트",
+      link: "http://www.navernavernavernavernavernavernavernaver.com",
+      image:
+        "https://cdn3.iconfinder.com/data/icons/feather-5/24/download-512.png",
+    },
+    {
+      icon: "file",
+      name: "테스트 파일",
+      modified: moment(),
+    },
+    {
+      icon: "folder",
+      name: "부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목",
+      modified: moment(),
+      avatar: "테스트",
+      link: "http://www.navernavernavernavernavernavernavernaver.com",
+      image:
+        "https://cdn3.iconfinder.com/data/icons/feather-5/24/download-512.png",
+    },
+    {
+      icon: "file",
+      name: "테스트 파일",
+      modified: moment(),
+    },
+    {
+      icon: "folder",
+      name: "부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목",
+      modified: moment(),
+      avatar: "테스트",
+      link: "http://www.navernavernavernavernavernavernavernaver.com",
+      image:
+        "https://cdn3.iconfinder.com/data/icons/feather-5/24/download-512.png",
+    },
+    {
+      icon: "file",
+      name: "테스트 파일",
+      modified: moment(),
+    },
+    {
+      icon: "folder",
+      name: "부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목",
+      modified: moment(),
+      avatar: "테스트",
+      link: "http://www.navernavernavernavernavernavernavernaver.com",
+      image:
+        "https://cdn3.iconfinder.com/data/icons/feather-5/24/download-512.png",
+    },
+    {
+      icon: "file",
+      name: "테스트 파일",
+      modified: moment(),
+    },
+    {
+      icon: "folder",
+      name: "부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목",
+      modified: moment(),
+      avatar: "테스트",
+      link: "http://www.navernavernavernavernavernavernavernaver.com",
+      image:
+        "https://cdn3.iconfinder.com/data/icons/feather-5/24/download-512.png",
+    },
+    {
+      icon: "file",
+      name: "테스트 파일",
+      modified: moment(),
+    },
+    {
+      icon: "folder",
+      name: "부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목",
+      modified: moment(),
+      avatar: "테스트",
+      link: "http://www.navernavernavernavernavernavernavernaver.com",
+      image:
+        "https://cdn3.iconfinder.com/data/icons/feather-5/24/download-512.png",
+    },
+    {
+      icon: "file",
+      name: "테스트 파일",
+      modified: moment(),
+    },
+    {
+      icon: "folder",
+      name: "부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목",
+      modified: moment(),
+      avatar: "테스트",
+      link: "http://www.navernavernavernavernavernavernavernaver.com",
+      image:
+        "https://cdn3.iconfinder.com/data/icons/feather-5/24/download-512.png",
+    },
+    {
+      icon: "file",
+      name: "테스트 파일",
+      modified: moment(),
+    },
+    {
+      icon: "folder",
+      name: "부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목",
+      modified: moment(),
+      avatar: "테스트",
+      link: "http://www.navernavernavernavernavernavernavernaver.com",
+      image:
+        "https://cdn3.iconfinder.com/data/icons/feather-5/24/download-512.png",
+    },
+    {
+      icon: "file",
+      name: "테스트 파일",
+      modified: moment(),
+    },
+    {
+      icon: "folder",
+      name: "부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목",
+      modified: moment(),
+      avatar: "테스트",
+      link: "http://www.navernavernavernavernavernavernavernaver.com",
+      image:
+        "https://cdn3.iconfinder.com/data/icons/feather-5/24/download-512.png",
+    },
+    {
+      icon: "file",
+      name: "테스트 파일",
+      modified: moment(),
+    },
+    {
+      icon: "folder",
+      name: "부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목",
+      modified: moment(),
+      avatar: "테스트",
+      link: "http://www.navernavernavernavernavernavernavernaver.com",
+      image:
+        "https://cdn3.iconfinder.com/data/icons/feather-5/24/download-512.png",
+    },
+    {
+      icon: "file",
+      name: "테스트 파일",
+      modified: moment(),
+    },
+    {
+      icon: "folder",
+      name: "부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목",
+      modified: moment(),
+      avatar: "테스트",
+      link: "http://www.navernavernavernavernavernavernavernaver.com",
+      image:
+        "https://cdn3.iconfinder.com/data/icons/feather-5/24/download-512.png",
+    },
+    {
+      icon: "file",
+      name: "테스트 파일",
+      modified: moment(),
+    },
+    {
+      icon: "folder",
+      name: "부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목",
+      modified: moment(),
+      avatar: "테스트",
+      link: "http://www.navernavernavernavernavernavernavernaver.com",
+      image:
+        "https://cdn3.iconfinder.com/data/icons/feather-5/24/download-512.png",
+    },
+    {
+      icon: "file",
+      name: "테스트 파일",
+      modified: moment(),
+    },
+    {
+      icon: "folder",
+      name: "부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목",
+      modified: moment(),
+      avatar: "테스트",
+      link: "http://www.navernavernavernavernavernavernavernaver.com",
+      image:
+        "https://cdn3.iconfinder.com/data/icons/feather-5/24/download-512.png",
+    },
+    {
+      icon: "file",
+      name: "테스트 파일",
+      modified: moment(),
+    },
+    {
+      icon: "folder",
+      name: "부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목부제목",
       modified: moment(),
       avatar: "테스트",
       link: "http://www.navernavernavernavernavernavernavernaver.com",
@@ -75,7 +730,7 @@ const Main = () => {
         // useBackward={true}
         // onBackward={() => onBackward()}
         // onFileDrop={(droppedFile) => onDroppedFiles(droppedFile)}
-        useVirtualized={true}
+        useVirtualized={false}
         useBackward={true}
         useMoveRecord={false}
       />

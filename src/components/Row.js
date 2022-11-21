@@ -255,7 +255,17 @@ const Row = ({
                 </div>
               </>
             ) : (
-              cell.render("Cell")
+              <div
+                style={{
+                  width: "100%",
+                  textOverflow: "ellipsis",
+                  overflow: "hidden",
+                  whiteSpace: "nowrap",
+                }}
+                title={cell.value.title}
+              >
+                {cell.render("Cell")}
+              </div>
             )}
           </DrawFlexContainer>
         );
@@ -311,9 +321,7 @@ const Row = ({
     return (
       <StyledLabel htmlFor={row.id}>
         <StyledCheckBox
-          className={
-            row.original.checked ? "checked" : !isMouseOverDiv && "hidden"
-          }
+          className={row.original.checked && "checked"}
           type="checkbox"
           id={row.id}
           checked={row.original.checked ? true : false}
@@ -356,31 +364,9 @@ const Row = ({
         }}
         className="tr"
       >
-        <div
+        <StyledRow
           ref={useMoveRecord ? dragRef : null}
-          style={{
-            fontWeight: isMouseOverDiv ? "bold" : "",
-            background: isMouseOverDiv ? "#F8F8F8" : "none",
-            cursor: isMouseOverDiv ? "pointer" : "default",
-            transition: "all 0.3s ease-out",
-          }}
-          onMouseEnter={() => setIsMouseOverDiv(true)}
-          onMouseLeave={() => setIsMouseOverDiv(false)}
-          // onMouseDown={(e) =>
-          //   1 < checkList.length
-          //     ? null
-          //     : row.original.checkbox
-          //     ? setCheckList([row.id])
-          //     : null
-          // }
-          onClick={(e) => {
-            // onClickRecord(row.original);
-            // if (row.original.checkBox) {
-            //   setCheckList([row.id]);
-            // }
-          }}
           onContextMenu={(event) => onContextMenu(row, event)}
-          // draggable={false}
         >
           {row.cells.map((cell) => {
             prepareRow(row);
@@ -418,7 +404,69 @@ const Row = ({
               </>
             );
           })}
-        </div>
+        </StyledRow>
+        {/* <div
+          ref={useMoveRecord ? dragRef : null}
+          style={{
+            fontWeight: isMouseOverDiv ? "bold" : "",
+            background: isMouseOverDiv ? "#F8F8F8" : "none",
+            cursor: isMouseOverDiv ? "pointer" : "default",
+            transition: "all 0.3s ease-out",
+          }}
+          onMouseEnter={() => setIsMouseOverDiv(true)}
+          onMouseLeave={() => setIsMouseOverDiv(false)}
+          // onMouseDown={(e) =>
+          //   1 < checkList.length
+          //     ? null
+          //     : row.original.checkbox
+          //     ? setCheckList([row.id])
+          //     : null
+          // }
+          onClick={(e) => {
+            // onClickRecord(row.original);
+            // if (row.original.checkBox) {
+            //   setCheckList([row.id]);
+            // }
+          }}
+          onContextMenu={(event) => onContextMenu(row, event)}
+        >
+          {row.cells.map((cell) => {
+            prepareRow(row);
+
+            return (
+              <>
+                <div
+                  {...cell.getCellProps()}
+                  style={{
+                    ...cell.getCellProps().style,
+                    verticalAlign: "middle",
+                    minHeight: rowHeight,
+                    boxSizing: "border-box",
+                    height: `${rowHeight ? rowHeight : 50}px`,
+                    // lineHeight: `${rowHeight ? rowHeight : 50}px`,
+                    opacity: `${
+                      "checkbox" !== cell.column.type
+                        ? row.original.readOnly
+                          ? 0.5
+                          : 1
+                        : 1
+                    }`,
+                  }}
+                  className={
+                    cell.column.className ? `td ${cell.column.className}` : `td`
+                  }
+                  onClick={() =>
+                    "checkbox" !== cell.column.type
+                      ? clickItem(row.original)
+                      : null
+                  }
+                >
+                  {convertValueToType(cell)}
+                </div>
+              </>
+            );
+          })}
+        </div> */}
       </div>
 
       {/* {row.cells.map((cell) => {
@@ -525,6 +573,7 @@ const StyledCheckBox = styled.input`
   height: 20px;
   border: 1px solid rgba(228, 228, 233, 1);
   border-radius: 50%;
+  visibility: hidden;
 
   &:checked {
     border-color: transparent;
@@ -534,8 +583,16 @@ const StyledCheckBox = styled.input`
     background-repeat: no-repeat;
     background-color: limegreen;
   }
+`;
 
-  &.hidden {
-    visibility: hidden;
+const StyledRow = styled.div`
+  &:hover {
+    font-weight: bold;
+    cursor: pointer;
+    background: #f8f8f8;
+
+    & > .td > div > label > input {
+      visibility: visible;
+    }
   }
 `;

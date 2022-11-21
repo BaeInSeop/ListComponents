@@ -163,75 +163,121 @@ const Row = ({
   const convertValueToType = (cell) => {
     switch (cell.column.type) {
       case "time":
-        return convertTimeFormat(cell.value);
+        return (
+          <DrawFlexContainer>{convertTimeFormat(cell.value)}</DrawFlexContainer>
+        );
 
       case "icon":
         return (
-          <RenderIcon type={cell.value} cursor={false} iconProps={iconProps} />
+          <DrawFlexContainer>
+            <RenderIcon
+              type={cell.value}
+              cursor={false}
+              iconProps={iconProps}
+            />
+          </DrawFlexContainer>
         );
 
       case "avatar":
         return (
-          <Avatar
-            name={cell.value}
-            size={avatarProps.size ? avatarProps.size : "25"}
-            round={avatarProps.round ? avatarProps.round : "50%"}
-          />
+          <DrawFlexContainer>
+            <Avatar
+              name={cell.value}
+              size={avatarProps.size ? avatarProps.size : "25"}
+              round={avatarProps.round ? avatarProps.round : "50%"}
+            />
+          </DrawFlexContainer>
         );
 
       case "link":
         return (
-          <div
-            style={{
-              display: "block",
-              width: "100%",
-              height: "100%",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-              boxSizing: "border-box",
-            }}
-          >
-            <a href={cell.value} target="_blank">
-              {"" !== linkProps.text ? linkProps.text : cell.value}
-            </a>
-          </div>
+          <DrawFlexContainer>
+            <div
+              style={{
+                width: "100%",
+                textOverflow: "ellipsis",
+                overflow: "hidden",
+                whiteSpace: "nowrap",
+              }}
+            >
+              <a href={cell.value} target="_blank">
+                {"" !== linkProps.text ? linkProps.text : cell.value}
+              </a>
+            </div>
+          </DrawFlexContainer>
         );
 
       case "checkbox":
-        return drawCheckBox();
+        return <DrawFlexContainer>{drawCheckBox()}</DrawFlexContainer>;
 
       case "image":
         if (!cell.value) {
           return;
         }
         return (
-          <div style={{ fontSize: 0 }}>
-            <a href={cell.value} target="_blank">
-              <img src={cell.value} width="30px" height="30px" />{" "}
-            </a>
-          </div>
+          <DrawFlexContainer>
+            <div style={{ fontSize: 0 }}>
+              <a href={cell.value} target="_blank">
+                <img src={cell.value} width="30px" height="30px" />{" "}
+              </a>
+            </div>
+          </DrawFlexContainer>
         );
 
       case "text":
       default:
         return (
-          <div
-            style={{
-              display: "block",
-              width: "100%",
-              height: "100%",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-              boxSizing: "border-box",
-            }}
-            title={cell.value}
-          >
-            {cell.render("Cell")}
-          </div>
+          <DrawFlexContainer>
+            {typeof cell.value === "object" ? (
+              <>
+                <div
+                  style={{
+                    width: "100%",
+                    textOverflow: "ellipsis",
+                    overflow: "hidden",
+                    whiteSpace: "nowrap",
+                  }}
+                  title={cell.value.title}
+                >
+                  {cell.value.title}
+                </div>
+                <div
+                  style={{
+                    width: "100%",
+                    textOverflow: "ellipsis",
+                    overflow: "hidden",
+                    whiteSpace: "nowrap",
+                    fontSize: "smaller",
+                    color: "#8B8E95",
+                  }}
+                >
+                  {cell.value.desc}
+                </div>
+              </>
+            ) : (
+              cell.render("Cell")
+            )}
+          </DrawFlexContainer>
         );
     }
+  };
+
+  const DrawFlexContainer = ({ children }) => {
+    return (
+      <div
+        style={{
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          minWidth: 0,
+        }}
+      >
+        {children}
+      </div>
+    );
   };
 
   const convertTimeFormat = (date) => {
@@ -349,7 +395,7 @@ const Row = ({
                     minHeight: rowHeight,
                     boxSizing: "border-box",
                     height: `${rowHeight ? rowHeight : 50}px`,
-                    lineHeight: `${rowHeight ? rowHeight : 50}px`,
+                    // lineHeight: `${rowHeight ? rowHeight : 50}px`,
                     opacity: `${
                       "checkbox" !== cell.column.type
                         ? row.original.readOnly
